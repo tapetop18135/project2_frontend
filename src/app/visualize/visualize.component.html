@@ -1,0 +1,257 @@
+<button class="ShowDM">
+  ----------- Show DM -----------
+</button>
+<div class="visualize">
+  <div class="">
+    <div class="head">
+      <h1>{{title}}</h1>
+    </div>
+  </div>
+  <div class="row" style="text-align: center">
+    <h4 class="nameMap" style="width: 100%; height: 5%;">Map Type :
+      <span class="typeMapShow"></span> Year :
+      <span class="dateRange"></span> Period :
+      <!-- <span class="monthShow"></span> Day :
+      <span class="dayShow"></span> -->
+    </h4>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="card" style="width: 100%; height: 700px;">
+        <h4 class="card-header">Customize</h4>
+        <div class="card-body customize">
+          <div class="step1" style="width: 100%; height: 100%;">
+            STEP 1
+            <div style="width: 100%; height: 370px;">
+              <div class="step1S" style="padding: 50% 0">
+                <form id="formS1">
+                  
+                  <input class="S1" id="S1-1" type="radio" name="step1S" value="RD">
+                  <label for="S1-1">Raw Data</label>
+                  <br>
+                  <input class="S1" id="S1-2" type="radio" name="step1S" value="DR">
+                  <label for="S1-2">Dimension Reduction</label>
+                </form>
+              </div>
+            </div>
+            <hr>
+            <div style="width: 100%; height: 20%;">
+              <button class="next">next</button>
+              <!-- <a class="next" href="#">next</a> -->
+            </div>
+
+          </div>
+          <div class="step2" style="display: none; width: 100%; height: 100%;">
+            STEP 2
+            <div class="step2-2" style="">
+              <div style="width: 100%; height: 450px;">
+                <div class="card">
+                  <h5>DATASET</h5>
+                  <h5 class="card-body">
+                    <div class="type_select_map">
+                      <div class="type_select_map">
+                        <select class="typeMap" style="width: 95%" [(ngModel)]="selecteddataType" name="selecteddatatype">
+                          <!-- <select [(ngModel)]="selecteddataType" (change)="onSelectMap($event.target.value)" name="selecteddatatype"> -->
+                          <option *ngFor="let oT of select_dataType">{{ oT }}</option>
+                        </select>
+                      </div>
+
+                    </div>
+                  </h5>
+                </div>
+                <div class="card">
+                  <h5>TYPE INDEX</h5>
+                  <h5 class="card-body">
+                    <div class="type_index">
+                      <div class="type_index">
+                        <select class="type_index" style="width: 95%" [(ngModel)]="selecteddataTypeIndex" name="selecteddataTypeIndex">
+                          <!-- <select [(ngModel)]="selecteddataType" (change)="onSelectMap($event.target.value)" name="selecteddatatype"> -->
+                          <option *ngFor="let oTs of select_dataTypeIndex">{{ oTs }}</option>
+                        </select>
+                      </div>
+
+                    </div>
+                  </h5>
+                </div>
+                <div class="card">
+                  <h5>PERIOD</h5>
+                  <h5 class="card-body">
+                    From
+                    <br>
+                    <select class="yearS" style="width: 45%" [(ngModel)]="selectedYear" name="selectedYear">
+                      <option *ngFor="let i of selectYear">{{ i }}</option>
+                    </select>
+                    -
+                    <select class="monthS" style="width: 45%" [(ngModel)]="selectedPeriod" name="selectedPeriod">
+                      <option *ngFor="let j of selectPeriod">{{ j }}</option>
+                    </select>
+                    <br> To
+                    <br>
+                    <select class="yearS2" style="width: 45%" [(ngModel)]="selectedYear2" name="selectedYear2">
+                      <option *ngFor="let k of selectYear2">{{ k }}</option>
+                    </select>
+                    -
+                    <select class="monthS2" style="width: 45%" [(ngModel)]="selectedPeriod2" name="selectedPeriod2">
+                      <option *ngFor="let l of selectPeriod2">{{ l }}</option>
+                    </select>
+
+                  </h5>
+                </div>
+                <p class="statusCant">Cant Next</p>
+              </div>
+            </div>
+            <hr>
+            <div style="width: 100%; height: 80%;">
+              <button class="pre">pre</button>
+              <button class="next">next</button>
+            </div>
+          </div>
+          <div class="step3" style="display: none; width: 100%; height: 100%;">
+            STEP 3
+            <div style="width: 100%; height: 370px;">
+              <div class="card">
+                <h5>SELECTION ON MAP</h5>
+                <h5 class="card-body">
+                  <div class="type_select_show">
+                    <!-- <select [(ngModel)]="selectedOnMap" (change)="onSelectFeature($event.target.value)" name="selectOnmap"> -->
+                    <select [(ngModel)]="selectedOnMap" (change)="onSelectFeature($event.target.value)" name="selectOnmap">
+                      <option *ngFor="let o of selectArr">{{ o }}</option>
+                    </select>
+                  </div>
+                </h5>
+              </div>
+              <div class="card">
+                <h5>SELECTION AREA</h5>
+                <h5 class="card-body">
+                  <div class="type_select_show">
+                    <select [(ngModel)]="selectedArea" name="selectedArea">
+                      <option *ngFor="let o of selectArea">{{ o }}</option>
+                    </select>
+                  </div>
+                </h5>
+              </div>
+            </div>
+
+            <hr>
+            <div style="width: 100%; height: 80%;">
+              <button class="pre">pre</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <div class="card" style="width: 100%; height: 100%;">
+        <div class="overlayMap" style="width: 100%; height: 90%;">
+          <img src="./gifAnimate/103 (1).gif" alt="">
+        </div>
+        <div id="mapV" class="mapV" style="width: 100%; height: 90%;"></div>
+        <div style="width: 100%; height: 10%;"></div>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="card" style="width: 100%; height: 100%;">
+        <div class="card">
+          <h5 class="card-header">Mean</h5>
+          <h5 class="card-body">
+            <p class="meanStat">--</p>
+          </h5>
+        </div>
+        <div class="card">
+          <h5 class="card-header">Median</h5>
+          <h5 class="card-body">
+            <p class="medianStat">--</p>
+          </h5>
+        </div>
+        <div class="card">
+          <h5 class="card-header">Mode</h5>
+          <h5 class="card-body">
+            <p class="modeStat">--</p>
+          </h5>
+        </div>
+        <div class="card">
+          <h5 class="card-header">SD</h5>
+          <h5 class="card-body">
+            <p class="sdStat">--</p>
+          </h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div style="text-align: center">
+      <div style="margin: 5px;width: 40%; display: inline-block ;" id="graph1"></div>
+      <div style="margin: 5px;width: 40%; display: inline-block ;" id="chartSeason"></div>
+    </div>
+    <div style="text-align: center">
+      <div style="margin: 5px;width: 40%; display: inline-block ;" id="graphSelect"></div>
+      <div style="margin: 5px;width: 40%; display: inline-block ;" id="graphSelectSeasonal"></div>
+    </div>
+    <!-- <div class="graph set_margin_middle">
+      <div class="row">
+        <div class="graph_1_2">
+          
+        </div>
+        <div class="graph_1_2">
+          <div id="graphV1"></div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+
+<!-- 
+<div class="visualize">
+  <div class="row">
+    <h1>{{ title }}</h1>
+  </div>
+  <div class="row">
+    <div class="set_middle">
+      Select Date :
+      <input type="date" name="select">
+    </div>
+  </div>
+  <div class="type_select_show">
+    <select [(ngModel)]="selectedOnMap" (change)="onSelectFeature($event.target.value)" name="selectOnmap">
+      <option *ngFor="let o of selectArr">{{ o }}</option>
+    </select>
+    <div>
+      You select : {{ selectedOnMap }}
+    </div>
+  </div>
+  <div class="type_select_map">
+    <select [(ngModel)]="selecteddataType" (change)="onSelectMap($event.target.value)" name="selecteddatatype">
+      <option *ngFor="let oT of select_dataType">{{ oT }}</option>
+    </select>
+    <div>
+      You select : {{ selecteddataType }}
+    </div>
+  </div>
+  <div class="row">
+    <div id="mapV" class="mapV"></div>
+    <div id="popup" class="ol-popup">
+      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+      <div id="popup-content"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <h2 style="text-align: center">Mean :
+        <span class="meanStat"></span>
+      </h2>
+    </div>
+  </div>
+  <div class="graph set_margin_middle">
+    <div class="row">
+      <div class="graph_1_2">
+        <div id="graphV"></div>
+      </div>
+      <div class="graph_1_2">
+        <div id="graphV1"></div>
+      </div>
+    </div>
+  </div>
+
+</div> -->

@@ -1,0 +1,58 @@
+.visualize{
+    /* height: 500px; */
+}
+
+.visualize .head h1{
+    /* height: 500px; */
+    text-align: center;
+}
+
+.c1Map h5{
+    color: red;
+    height: 1500px;
+}
+
+.mapV{
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    border: 2px #555 solid; 
+    border-radius: 3px;
+}
+.overlayMap{
+    z-index: 1;
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(150, 150, 150, 0.8)
+    /* left: 50%;
+    top: 50%; */
+}
+
+.set_middle{
+    text-align: center;
+    margin: 5px
+}
+.set_margin_middle{
+    margin: auto;
+}
+
+/* #graph1{
+    width: 80%;
+    display: inline-block;
+    margin: 15px;
+} */
+/* .graph .graph_1_2{
+    border: 1px #555 solid;
+    display: inline-block;
+    width: 45%;
+    margin: 15px;
+}
+
+.graph .graph_1_1{
+    border: 1px #555 solid;
+    display: inline-block;
+    width: 70%;
+    margin: 15px;
+} */
