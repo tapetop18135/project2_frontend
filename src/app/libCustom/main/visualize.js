@@ -24,7 +24,7 @@ import { async } from 'q';
 import { callbackify, debug } from 'util';
 import { debuglog } from 'util';
 
-export var domainIP = "http://18.136.209.215:8080"
+export var domainIP = "http://127.0.0.1:3200"
 
 export var tempSend = {
     "dataset": "- Non select -",
