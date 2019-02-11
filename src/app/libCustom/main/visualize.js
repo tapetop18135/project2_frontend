@@ -22,6 +22,9 @@ import Polygon from 'ol/geom/Polygon'
 import * as Highcharts from 'highcharts'
 import { async } from 'q';
 import { callbackify, debug } from 'util';
+import { debuglog } from 'util';
+
+export var domainIP = "http://18.136.209.215:8080"
 
 export var tempSend = {
     "dataset": "- Non select -",
@@ -71,9 +74,9 @@ export var map = undefined
 
 export var vectorLayerGeo = new Vector({
     source: new souceVector({
-        url: 'http://127.0.0.1:3000/api/getgeocountry',
+        url: `${domainIP}/api/getgeocountry`,
         format: new GeoJSON(),
-        //   wrapX: false
+        // wrapX: false
     }),
     opacity: 0.7
 })
@@ -89,34 +92,22 @@ async function genGeoList(data_list, date_list) {
         for (var j = 0; j < arr.length; j++) {
             GeoJsonList[arr[j]].push(genGeojson(data_list[i]["data"][arr[j]], date_list[i]))
         }
-        // GeoJsonList.push({"Jan":genGeojson(data_list[i]["data"]["Jan"], date_list[i])})
-        // GeoJsonList.push({"Feb":genGeojson(data_list[i]["data"]["Feb"], date_list[i])})
-        // GeoJsonList.push({"Mar":genGeojson(data_list[i]["data"]["Mar"], date_list[i])})
-        // GeoJsonList.push({"Apr":genGeojson(data_list[i]["data"]["Apr"], date_list[i])})
-        // GeoJsonList.push({"May":genGeojson(data_list[i]["data"]["May"], date_list[i])})
-        // GeoJsonList.push({"Jun":genGeojson(data_list[i]["data"]["Jun"], date_list[i])})
-        // GeoJsonList.push({"Jul":genGeojson(data_list[i]["data"]["Jul"], date_list[i])})
-        // GeoJsonList.push({"Aug":genGeojson(data_list[i]["data"]["Aug"], date_list[i])})
-        // GeoJsonList.push({"Sep":genGeojson(data_list[i]["data"]["Sep"], date_list[i])})
-        // GeoJsonList.push({"Oct":genGeojson(data_list[i]["data"]["Oct"], date_list[i])})
-        // GeoJsonList.push({"Nov":genGeojson(data_list[i]["data"]["Nov"], date_list[i])})
-        // GeoJsonList.push({"Dec":genGeojson(data_list[i]["data"]["Dec"], date_list[i])})
     }
     debugger
 }
 
 export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
-
+    tempSend["data_list"] = []
     if (tempSend["modeUSE"] === "RD") {
         if (dataset == "GHCN" && index_ != "") {
             // var index_ = "TX10p"
             // var urldata0 = `http://127.0.0.1:3000/api/getmap/rawdata/${dataset}/${year1}/${year2}/${index_}/`
-            // var urldata = `http://127.0.0.1:3000/api/getmap/rawdata/${dataset}/${year1}/${year1}/${index_}/`
+            var urldata = `http://127.0.0.1:3000/api/getmap/rawdata/${dataset}/${year1}/${year1}/${index_}/`
 
-            var urldata = `http://127.0.0.1:3000/api/getmap/mapAVG/${dataset}/${year1}/${year1}/${index_}/`
+            var urldata = `${domainIP}/api/getmap/mapAVG/${dataset}/${year1}/${year2}/${index_}/`
         }
         else {
-            var urldata = `http://127.0.0.1:3000/api/getmap/reduce/${year1}/${year2}/${dataset}`
+            var urldata = `${domainIP}/api/getmap/reduce/${year1}/${year2}/${dataset}`
         }
 
         fetch(urldata).then(function (res) {
@@ -167,6 +158,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             tempMapLayer["gridDataColor"] = gridL
             map.addLayer(tempMapLayer["gridDataColor"])
 
+            // map.addLayer(tempMapLayer["baselayer"])
 
 
             console.log(tempSend)
@@ -182,6 +174,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             var numUseFetch = 15
             // tempSend["data_list"] = new Array(numTotal)
             var tempDate = []
+            debugger
 
             for (var i = 0; i < diff; i++) {
                 tempDate.push(`${tyearS}-01-01`)
@@ -210,7 +203,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
         // api/getmap/dimenstionR/<type_method>/<type_map>'
         var type_map = dataset
         var type_method = index_
-        var urldata = `http://127.0.0.1:3000/api/getmap/dimenstionR/${type_map}/${type_method}`
+        var urldata = `${domainIP}/api/getmap/dimenstionR/${type_map}/${type_method}`
         $.getJSON(urldata, function (result) {
 
             map = genMap("mapV")
@@ -254,12 +247,12 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             max_min = find_max_min(data_list[0])
             // debugger
             var geojson = genGeojson(lat_list, lon_list, data_list[0], date_list[0])
-            debugger
+            // debugger
             console.log(map.getLayers().array_.length)
             map.removeLayer(gridL)
             console.log(map.getLayers().array_.length)
             gridL = genGridData(geojson, 2.2)
-            debugger
+            // debugger
             // // debugger
             console.log("-------------------------------------------")
             console.log(gridL)
@@ -314,10 +307,13 @@ export function genGeojson(data_list, date) {
     for (var i = 0; i < data_list.length; i += 1) {
         points.features.push({
             type: 'Feature',
-            properties: { "value": data_list[i]["value"], "lat": data_list[i]["lat"], "lon": data_list[i]["lon"], "date": date },
+            properties: { "value": data_list[i]["value"] * 100, "lat": data_list[i]["lat"], "lon": data_list[i]["lon"], "date": date },
             geometry: {
                 type: 'Point',
-                coordinates: [data_list[i]["lon"], data_list[i]["lat"]]
+                coordinates: [ (data_list[i]["lon"] >= 180) ? data_list[i]["lon"] - 360 : data_list[i]["lon"] 
+                    ,
+                     data_list[i]["lat"]
+                    ]
             }
         })
     }
@@ -376,7 +372,8 @@ export function genMap(target) {
             zoom: 2.6
         })
     });
-    tempMapLayer["baselayer"] = basesource
+
+    tempMapLayer["baselayer"] = basesource//vectorLayerGeo//basesource
     console.log("============== BEFORE ==============")
     map.addLayer(tempMapLayer["baselayer"])
     return map
@@ -394,7 +391,7 @@ var find_max_min = function (allGrid) {
             min = array[i]["value"]
         }
     }
-    return [max, min]
+    return [max * 100, min * 100]
     // for (var i = 0; i < (array.length); i++) {
     //     for (var j = 0; j < array[i].length; j++) {
     //         if (array[i][j] != -99.9999) {
@@ -463,7 +460,7 @@ export function genGridData(geojson, gridSize) {
     }
     tem = tem.sort((a, b) => a - b)
     console.log(tem)
-    debugger
+    // debugger
     var gridStyle = function (feature) {
 
         var coordinate = feature.getGeometry().getCoordinates()
@@ -686,8 +683,8 @@ $(document).ready(function () {
 
                 if (map === undefined) { map = genMap("mapV") }
 
-                var year1Start = `${tempSend["year1"]}-${getMonth(tempSend["month1"])}-01`
-                var year2Start = `${tempSend["year2"]}-${getMonth(tempSend["month2"])}-01`
+                var year1Start = `${tempSend["year1"]}-0${getMonth(tempSend["month1"])}-01`
+                var year2Start = `${tempSend["year2"]}-0${getMonth(tempSend["month2"])}-01`
 
                 var temp_index = tempSend["type_index"]
 
@@ -822,13 +819,14 @@ function AsynTest1(callback) {
 }
 
 function fetchCustom(dataset, index_, sli, init, end) {
-    var url = `http://127.0.0.1:3000/api/getmap/rawdata/${dataset}/${sli[0]}/${sli[sli.length - 1]}/${index_}/`
+    var url = `${domainIP}/api/getmap/rawdata/${dataset}/${sli[0]}/${sli[sli.length - 1]}/${index_}/`
     console.log(url)
     // debugger
 
     fetch(url).then(function (res) {
         return res.json();
     }).then(function (resultAll) {
+        // debugger
         var data_l = resultAll["data"]
         var date_l = resultAll["date_range"]
         var j = 0
@@ -847,7 +845,7 @@ function fetchCustom(dataset, index_, sli, init, end) {
             // tempSend["lat_list"] = lat_list
             // tempSend["lon_list"] = lon_list
 
-            debugger
+            // debugger
             tempSend["date_list"] = date_list
             // tempSend["data_list"] = data_list
             tempSend["data_now"] = data_list[date_list[0]]
@@ -861,7 +859,7 @@ function fetchCustom(dataset, index_, sli, init, end) {
                 arrayGlobalAVG.push(parseFloat(averageNew(data_list[i]["data"]["Ann"])))
             }
             tempSend["average_world"] = arrayGlobalAVG
-            debugger
+            // debugger
             AsynTest1(function () {
                 genGeoList(tempSend["data_list"], tempSend["date_list"])
             })
@@ -875,7 +873,8 @@ function fetchCustom(dataset, index_, sli, init, end) {
 
             genChart("graph1", tempSend["average_world"], tempSend["date_list"], nameData1, nameGraph, nameSub, titleY, unit, "#908F8F", 'spline') // areaspline
             arrayGlobalAVG = []
-            debugger
+            alert("SuccccccessssssssSS")
+            // debugger
         }
     })
 
