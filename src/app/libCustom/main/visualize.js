@@ -148,10 +148,14 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
                 tempSend["date_range"] = result["data"][0]["date"]
                 var typeU = dataset
                 debugger
+                var avg = averageNew(data_list[date_list[0]]["data"]["Ann"])
+
+                $(".meanStat").html(avg)
 
                 max_min = find_max_min(data_list[date_list[0]]["data"]["Ann"])
                 var geojson = genGeojson(data_list[date_list[0]]["data"]["Ann"], date_list[0])
                 debugger
+
 
             } else {
                 // console.log(dataset)
@@ -186,6 +190,8 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             tempMapLayer["gridDataColor"] = gridL
             map.addLayer(tempMapLayer["gridDataColor"])
             map.addLayer(tempMapLayer["baselayer"])
+            
+            setDisplay(tempSend["typeMap"], tempSend["year1"], tempSend["year2"])
             debugger
 
             console.log(tempSend)
@@ -198,7 +204,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             var tyearE = parseInt(year2.slice(0, 4))
             var diff = (tyearE - tyearS) + 1
             var numTotal = diff
-            var numUseFetch = 15
+            var numUseFetch = 3
             // tempSend["data_list"] = new Array(numTotal)
             var tempDate = []
             // debugger
@@ -734,7 +740,7 @@ $(document).ready(function () {
     // $(".monthShow").html(tempSend["month"])
     // $(".dayShow").html(tempSend["day"])
 
-    setDisplay(tempSend["dataset"], tempSend["date_range"])
+    setDisplay(tempSend["typeMap"], tempSend["year1"], tempSend["year2"])
 
     // $(".customize .")
 
@@ -766,9 +772,9 @@ $(document).ready(function () {
                 var temp_index = tempSend["type_index"]
 
                 update_getGee(year1Start, year2Start, tempSend["dataset"], map, temp_index)
-
-                setDisplay(tempSend["dataset"], tempSend["year1"], tempSend["month1"], tempSend["day1"] = "01")
-                console.log("Step2 next vi")
+                
+                // setDisplay(tempSend["dataset"], tempSend["year1"], tempSend["month1"], tempSend["day1"] = "01")
+                // console.log("Step2 next vi")
                 // genChart(target, data1, period, nameData1,nameGraph, nameSub, titleY, unit)
 
                 console.log(tempSend)
@@ -808,7 +814,9 @@ $(document).ready(function () {
         $(".yearS2 option:selected").each(function (index) {
             console.log(this)
             tempSend["year2"] = this.value
+            console.log(tempSend["year2"])
             checkStep2()
+            debugger
         })
     })
 
@@ -838,9 +846,10 @@ $(document).ready(function () {
 
 });
 
-function setDisplay(dataset, date_range) {
+function setDisplay(dataset, date_range1, date_range2) {
     $(".typeMapShow").html(dataset)
-    $(".dateRange").html(date_range)
+    $(".dateRange1").html(date_range1)
+    $(".dateRange2").html(date_range2)
 }
 
 function getMonth(monthName) {
@@ -946,7 +955,7 @@ function fetchCustom(dataset, index_, sli, init, end) {
             var titleY = tempSend["ylabel"]
             var unit = tempSend["unit"]
 
-            $(".meanStat").html(tempSend["average_world"][0])
+            // $(".meanStat").html(tempSend["average_world"][0])
 
             genChart("graph1", tempSend["average_world"], tempSend["date_list"], nameData1, nameGraph, nameSub, titleY, unit, "#908F8F", 'spline') // areaspline
             arrayGlobalAVG = []
