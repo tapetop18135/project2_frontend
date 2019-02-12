@@ -43,7 +43,7 @@ export class VisualizeComponent implements OnInit {
   select_dataType = ["- Non select -", "GHCN"]
   selecteddataType: string = this.select_dataType[0]
 
-  select_dataTypeIndex = ["- Non select -", "TXx", "TNn"]
+  select_dataTypeIndex = ["- Non select -", "TXx", "TNn", "TXx PCA", "TNn PCA"]
   selecteddataTypeIndex: string = this.select_dataType[0]
 
 

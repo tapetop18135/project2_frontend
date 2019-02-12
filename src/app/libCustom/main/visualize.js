@@ -25,7 +25,7 @@ import { async } from 'q';
 import { callbackify, debug } from 'util';
 import { debuglog } from 'util';
 
-export var domainIP = "http://18.136.209.215:8080"// "http://127.0.0.1:3200"//
+export var domainIP = "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
 
 export var tempSend = {
     "typeMap": undefined,
@@ -127,10 +127,21 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
     if (tempSend["modeUSE"] === "RD") {
         if (dataset == "GHCN" && index_ != "") {
             // var index_ = "TX10p"
+            debugger
             // var urldata0 = `http://127.0.0.1:3000/api/getmap/rawdata/${dataset}/${year1}/${year2}/${index_}/`
-            var urldata = `http://127.0.0.1:3000/api/getmap/rawdata/${dataset}/${year1}/${year1}/${index_}/`
-
-            var urldata = `${domainIP}/api/getmap/mapAVG/${dataset}/${year1}/${year2}/${index_}/`
+            // var urldata = `http://127.0.0.1:3000/api/getmap/rawdata/${dataset}/${year1}/${year1}/${index_}/`
+            // var index_ = index_.split(/(\s+)/)[0];
+            // var index_ =
+            var usePca = index_.split(/(\s+)/)[2]
+            
+            var index_ = index_.split(/(\s+)/)[0];
+            debugger
+            if(usePca == "PCA"){
+                var urldata = `${domainIP}/api/getmap/mapPCA/${dataset}/${index_}/`
+            }else{
+                var urldata = `${domainIP}/api/getmap/mapAVG/${dataset}/${year1}/${year2}/${index_}/`
+            }
+            
         }
         else {
             var urldata = `${domainIP}/api/getmap/reduce/${year1}/${year2}/${dataset}`
@@ -190,7 +201,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             tempMapLayer["gridDataColor"] = gridL
             map.addLayer(tempMapLayer["gridDataColor"])
             map.addLayer(tempMapLayer["baselayer"])
-            
+
             setDisplay(tempSend["typeMap"], tempSend["year1"], tempSend["year2"])
             debugger
 
@@ -757,6 +768,8 @@ $(document).ready(function () {
     })
 
     $(".customize .next").on("click", function (e) {
+        
+        
         e.preventDefault()
         console.log(tempSend)
         console.log("SSSSSSSSSSSSSSS")
@@ -770,7 +783,6 @@ $(document).ready(function () {
                 var year2Start = `${tempSend["year2"]}-0${getMonth(tempSend["month2"])}-01`
 
                 var temp_index = tempSend["type_index"]
-
                 update_getGee(year1Start, year2Start, tempSend["dataset"], map, temp_index)
                 
                 // setDisplay(tempSend["dataset"], tempSend["year1"], tempSend["month1"], tempSend["day1"] = "01")
@@ -840,6 +852,7 @@ $(document).ready(function () {
         $(".type_index option:selected").each(function (index) {
             console.log(this)
             tempSend["type_index"] = this.value
+            debugger
             checkStep2()
         })
     })
