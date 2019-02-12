@@ -13,9 +13,10 @@ import Vector from 'ol/layer/Vector'
 import souceVector from 'ol/source/Vector'
 import GeoJSON from 'ol/format/GeoJSON'
 import WebGLMap from 'ol/WebGLMap'
-import Style from 'ol/style/Style'
-import Fill from 'ol/style/Fill'
+// import Style from 'ol/style/Style'
+// import Fill from 'ol/style/Fill'
 import Polygon from 'ol/geom/Polygon'
+import {Fill, Stroke, Style, Text} from 'ol/style.js';
 
 // import { interactionWithMap } from '../main/mapInteract'
 
@@ -24,9 +25,10 @@ import { async } from 'q';
 import { callbackify, debug } from 'util';
 import { debuglog } from 'util';
 
-export var domainIP = "http://18.136.209.215:8080"
+export var domainIP = "http://18.136.209.215:8080"// "http://127.0.0.1:3200"//
 
 export var tempSend = {
+    "typeMap": undefined,
     "dataset": "- Non select -",
     "year1": "- Non select -",
     "month1": "- Non select -",
@@ -72,13 +74,37 @@ var max_min;
 
 export var map = undefined
 
+var styleGeoe = new Style({
+    fill: new Fill({
+      color: 'rgba(255, 255, 255, 0)'
+    }),
+    stroke: new Stroke({
+      color: '#000',
+      width: 1
+    })
+    // text: new Text({
+    //   font: '12px Calibri,sans-serif',
+    //   fill: new Fill({
+    //     color: '#000'
+    //   }),
+    //   stroke: new Stroke({
+    //     color: '#fff',
+    //     width: 3
+    //   })
+    // })
+  });
+
 export var vectorLayerGeo = new Vector({
     source: new souceVector({
         url: `${domainIP}/api/getgeocountry`,
         format: new GeoJSON(),
         // wrapX: false
     }),
-    opacity: 0.7
+    opacity: 0.6,
+    //     // styleGeo.getText().setText(feature.get('name'));
+    //     return styleGeo;
+    //   }
+    // // opacity: 0.7
 })
 
 export var GeoJsonList = {}
@@ -115,6 +141,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
         }).then(function (result) {
 
             if (dataset == "GHCN") {
+                tempSend["typeMap"] = result["data"][0]["type_map"]
                 debugger
                 var date_list = result["date_range"]
                 var data_list = result["data"]
@@ -148,6 +175,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
 
             console.log(map.getLayers().array_.length)
             map.removeLayer(tempMapLayer["gridDataColor"])
+            map.removeLayer(tempMapLayer["baselayer"])
             console.log(map.getLayers().array_.length)
             gridL = genGridData(geojson, gridSize)
 
@@ -157,9 +185,8 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             console.log("-------------------------------------------")
             tempMapLayer["gridDataColor"] = gridL
             map.addLayer(tempMapLayer["gridDataColor"])
-
-            // map.addLayer(tempMapLayer["baselayer"])
-
+            map.addLayer(tempMapLayer["baselayer"])
+            debugger
 
             console.log(tempSend)
         })
@@ -174,7 +201,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             var numUseFetch = 15
             // tempSend["data_list"] = new Array(numTotal)
             var tempDate = []
-            debugger
+            // debugger
 
             for (var i = 0; i < diff; i++) {
                 tempDate.push(`${tyearS}-01-01`)
@@ -258,7 +285,7 @@ export var update_getGee = function (year1, year2, dataset, map, index_ = "") {
             console.log(gridL)
             console.log("-------------------------------------------")
             map.addLayer(gridL)
-
+            // map.addLayer(tempMapLayer["baselayer"])
 
 
         });
@@ -299,6 +326,13 @@ export function updateMapWithDate(map, data, geojsonNow) {
 }
 
 export function genGeojson(data_list, date) {
+    var multi = 1
+    if(tempSend["typeMap"] == "avg"){
+        multi = 1
+    }else if(tempSend["typeMap"] == "dm" || tempSend["typeMap"] == "trend"){
+        multi = 100
+    }
+
     var points = {
         type: 'FeatureCollection',
         features: []
@@ -307,7 +341,7 @@ export function genGeojson(data_list, date) {
     for (var i = 0; i < data_list.length; i += 1) {
         points.features.push({
             type: 'Feature',
-            properties: { "value": data_list[i]["value"] * 100, "lat": data_list[i]["lat"], "lon": data_list[i]["lon"], "date": date },
+            properties: { "value": data_list[i]["value"] * multi, "lat": data_list[i]["lat"], "lon": data_list[i]["lon"], "date": date },
             geometry: {
                 type: 'Point',
                 coordinates: [ (data_list[i]["lon"] >= 180) ? data_list[i]["lon"] - 360 : data_list[i]["lon"] 
@@ -351,10 +385,44 @@ export function genGeojson(data_list, date) {
     return points
 }
 
+var styleGeo = new Style({
+    fill: new Fill({
+      color: 'rgba(255, 255, 255, 0)'
+    }),
+    stroke: new Stroke({
+      color: '#000',
+      width: 1
+    })
+    // text: new Text({
+    //   font: '12px Calibri,sans-serif',
+    //   fill: new Fill({
+    //     color: '#000'
+    //   }),
+    //   stroke: new Stroke({
+    //     color: '#fff',
+    //     width: 3
+    //   })
+    // })
+  });
+
+
 export function genMap(target) {
     console.log("--------- GEN MAP ---------")
     var basesource = new Tile({
         source: new OSM({})
+    })
+
+    var BasevectorLayerGeo = new Vector({
+        source: new souceVector({
+            url: `${domainIP}/api/getgeocountry`,
+            format: new GeoJSON(),
+            // wrapX: false
+        }),
+        style: function(feature) {
+            // styleGeo.getText().setText(feature.get('name'));
+            return styleGeo;
+          }
+        // opacity: 0.7
     })
 
     var map = new WebGLMap({
@@ -373,9 +441,9 @@ export function genMap(target) {
         })
     });
 
-    tempMapLayer["baselayer"] = basesource//vectorLayerGeo//basesource
+    tempMapLayer["baselayer"] = BasevectorLayerGeo//basesource
     console.log("============== BEFORE ==============")
-    map.addLayer(tempMapLayer["baselayer"])
+    // map.addLayer(tempMapLayer["baselayer"])
     return map
 }
 
@@ -391,7 +459,16 @@ var find_max_min = function (allGrid) {
             min = array[i]["value"]
         }
     }
-    return [max * 100, min * 100]
+    $(".maxStat").html(max.toFixed(2))
+    $(".minStat").html(min.toFixed(2))
+    var multi = 1
+    if(tempSend["typeMap"] == "avg"){
+        multi = 1
+    }else if(tempSend["typeMap"] == "dm" || tempSend["typeMap"] == "trend"){
+        multi = 100
+    }
+    debugger
+    return [max * multi, min * multi]
     // for (var i = 0; i < (array.length); i++) {
     //     for (var j = 0; j < array[i].length; j++) {
     //         if (array[i][j] != -99.9999) {

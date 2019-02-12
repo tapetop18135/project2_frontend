@@ -16,7 +16,7 @@ import * as $ from 'jquery'
 
 export function selectCustom(map, gridList, grid) {
   debugger
-
+  
   
   if(tempMapLayer["interactive"] != undefined){
     map.removeLayer(tempMapLayer["interactive"])
@@ -26,6 +26,8 @@ export function selectCustom(map, gridList, grid) {
     map.removeInteraction(tempInteract["interactive"]) 
     tempInteract["interactive"] = undefined
   }
+
+  map.addLayer(tempMapLayer["baselayer"])
 
   var arrayAverage = []
   console.log("################### Select Custom #########################")
@@ -511,6 +513,7 @@ export function selectOnePoint(map) {
 
 
 export function selectFeatureCountry(map, gridList, geoVector, gridData, year, typeUse) {
+
   console.log("################### Select Country #########################")
   // var startTime = undefined;
   // startTime = new Date().getTime()
@@ -531,7 +534,7 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
   //     alert(new Date().getTime() - startTime)
   //     debugger
   // })
-
+  map.removeLayer(tempMapLayer["baselayer"])
   if(tempMapLayer["interactive"] != undefined){
     map.removeLayer(tempMapLayer["interactive"])
     tempMapLayer["interactive"] = undefined
@@ -541,7 +544,7 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     map.removeInteraction(tempInteract["interactive"]) 
     tempInteract["interactive"] = undefined
   }
-
+  debugger
   var gjson = {
     "type": "FeatureCollection",
     "features": [
@@ -745,7 +748,7 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
   console.log(typeUse)
 
   selectClick.on('select', function (e) {
-
+    debugger
     var feature_name = e.target.getFeatures().array_[0].values_.name
     var feature_id = e.target.getFeatures().array_[0].getId()
     // var coors = e.selected[0].getGeometry().getCoordinates()

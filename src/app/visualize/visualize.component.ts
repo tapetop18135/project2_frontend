@@ -28,30 +28,37 @@ export class VisualizeComponent implements OnInit {
   selectPeriod = ["- Non select -","January", "February", "March", "April", "May", "June", "July", "August	", "September", "October", "November", "December"]
   selectedPeriod: string = this.selectPeriod[0]
 
-  selectYear = ["- Non select -", "1951", "1954", "1961", "1971", "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "1950",
-                "2000", "2001", "2002", "2010", "2011", "2017"]
+  selectYear = this.genYear(1951, 2010)
   selectedYear: string = this.selectYear[0]
 
   selectPeriod2 = ["- Non select -","January", "February", "March", "April", "May", "June", "July", "August	", "September", "October", "November", "December"]
   selectedPeriod2: string = this.selectPeriod[0]
 
-  selectYear2 = ["- Non select -", "1951", "1954", "1961", "1971","1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "1950", 
-                "2000", "2001", "2002", "2010", "2011", "2017"]
-  selectedYear2: string = this.selectYear[0]
+  selectYear2 = this.genYear(1951, 2010)
+  selectedYear2: string = this.selectYear2[0]
 
   selectArea = ["- Non select -","World", "Asia", "Africa", "South America", "North America", "Australia", "Europe"]
   selectedArea: string = this.selectArea[0]
 
-  select_dataType = ["- Non select -", "tmax", "tmin", "sst", "precip", "index", "GHCN"]
+  select_dataType = ["- Non select -", "GHCN"]
   selecteddataType: string = this.select_dataType[0]
 
-  select_dataTypeIndex = ["- Non select -", "TX10p", "TN10p", "TXx", "TNn"]
+  select_dataTypeIndex = ["- Non select -", "TXx", "TNn"]
   selecteddataTypeIndex: string = this.select_dataType[0]
 
 
   // Step1Choose: string;
   // Step1Array = ['Dimension Reduction', 'Raw Data'];
 
+  genYear(yinit, yend){
+    var array = ["- Non select -"]
+    var diff = yend - yinit
+    for(var i = 0; i <= diff; i+= 1){
+      array.push(yinit)
+      yinit += 1
+    }
+    return array;
+  }
 
   imagePath:string = "app/img/icon/angle-arrow-pointing-to-right.png" 
 
