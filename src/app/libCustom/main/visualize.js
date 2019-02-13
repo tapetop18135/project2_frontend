@@ -25,7 +25,7 @@ import { async } from 'q';
 import { callbackify, debug } from 'util';
 import { debuglog } from 'util';
 
-export var domainIP = "http://18.136.209.215:8080"// "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
+export var domainIP = "http://18.136.209.215:8080" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
 
 export var tempSend = {
     "typeMap": undefined,
@@ -329,10 +329,7 @@ export function updateMapWithDate(map, data, geojsonNow) {
 
     debugger 
     tempMapLayer["geojsonlayer"].clear()
-    // var temNewGeojson = new souceVector({
-    //     features: (new GeoJSON()).readFeatures(geojsonNow),
-    //     // wrapX: false
-    // })
+    
     
     debugger 
     var tempNewGeojson = new GeoJSON().readFeatures(geojsonNow)
@@ -354,7 +351,7 @@ export function genGeojson(data_list, date) {
         type: 'FeatureCollection',
         features: []
     };
-    // console.log(date)
+    
     for (var i = 0; i < data_list.length; i += 1) {
         points.features.push({
             type: 'Feature',
@@ -368,36 +365,6 @@ export function genGeojson(data_list, date) {
             }
         })
     }
-    // debugger
-    // for (var lat_index = 0; lat_index < list_lat.length; lat_index += 1) {
-    //     for (var lot_index = 0; lot_index < list_lon.length; lot_index += 1) {
-    //         if (tempSend["modeUSE"] == "RD") {
-    //             if (data_list[lat_index][lot_index] != -99.9999) {
-    //                 points.features.push({
-    //                     type: 'Feature',
-    //                     properties: { "value": data_list[lat_index][lot_index], "lat": list_lat[lat_index], "lon": list_lon[lot_index], "date": date },
-    //                     geometry: {
-    //                         type: 'Point',
-    //                         coordinates: [list_lon[lot_index], list_lat[lat_index]]
-    //                     }
-    //                 })
-    //             }
-    //         }
-    //         else if (tempSend["modeUSE"] == "DR") {
-    //             if (data_list[lat_index][lot_index]) {
-    //                 points.features.push({
-    //                     type: 'Feature',
-    //                     properties: { "value": data_list[lat_index][lot_index], "lat": list_lat[lat_index], "lon": list_lon[lot_index], "date": date },
-    //                     geometry: {
-    //                         type: 'Point',
-    //                         coordinates: [list_lon[lot_index], list_lat[lat_index]]
-    //                     }
-    //                 })
-    //             }
-    //         }
-
-    //     }
-    // }
 
     return points
 }
@@ -607,9 +574,9 @@ export function genGridData(geojson, gridSize) {
 }
 
 
-///////////////////////////////////////////////////////
-///////////////////////// CHART ////////////////////////
-///////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+///////////////////////// CHART /////////////////////////
+/////////////////////////////////////////////////////////
 
 
 export function genChart(target, data1, period, nameData1, nameGraph, nameSub, titleY, unit, color, type) {
@@ -746,14 +713,8 @@ $(document).ready(function () {
     // debugger
     $(".customize .step2 .next").hide()
 
-    // $(".typeMapShow").html(tempSend["dataset"])
-    // $(".yearShow").html(tempSend["year"])
-    // $(".monthShow").html(tempSend["month"])
-    // $(".dayShow").html(tempSend["day"])
-
     setDisplay(tempSend["typeMap"], tempSend["year1"], tempSend["year2"])
 
-    // $(".customize .")
 
     $(".ShowDM").on("click", function () {
         console.log(GeoJsonList)
@@ -768,7 +729,6 @@ $(document).ready(function () {
     })
 
     $(".customize .next").on("click", function (e) {
-        
         
         e.preventDefault()
         console.log(tempSend)
