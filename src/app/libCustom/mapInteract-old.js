@@ -8,27 +8,29 @@ import souceVector from 'ol/source/Vector'
 
 import { boundingExtent } from 'ol/extent'
 import { fromLonLat, toLonLat } from 'ol/proj'
-import { genChart, tempSend, tempMapLayer, tempInteract, tempSourceLayer, domainIP, highchartsModule } from './visualize'
-import { Circle as CircleStyle, RegularShape, Fill, Stroke, Style } from 'ol/style.js';
+import { genChart, tempSend, tempMapLayer, tempInteract } from './visualize'
+
 
 
 import * as $ from 'jquery'
 
-export function selectCustom(map) {
+export function selectCustom(map, gridList, grid) {
   debugger
-  if (tempMapLayer["interactive"] != undefined) {
+  
+  
+  if(tempMapLayer["interactive"] != undefined){
     map.removeLayer(tempMapLayer["interactive"])
     tempMapLayer["interactive"] = undefined
   }
-  if (tempInteract["interactive"] != undefined) {
-    map.removeInteraction(tempInteract["interactive"])
+  if(tempInteract["interactive"] != undefined){
+    map.removeInteraction(tempInteract["interactive"]) 
     tempInteract["interactive"] = undefined
   }
 
   map.addLayer(tempMapLayer["baselayer"])
 
+  var arrayAverage = []
   console.log("################### Select Custom #########################")
-
   var gjson = {
     "type": "FeatureCollection",
     "features": [
@@ -208,103 +210,17 @@ export function selectCustom(map) {
     ]
   }
 
-  debugger
-
-  // var image = new CircleStyle({
-  //   radius: 5,
-  //   stroke: new Stroke({ color: 'red', width: 1 })
-  // });
-
-  var stylesNew = {
-    'Point': new Style({
-      image: new RegularShape({
-        fill: new Fill({ color: [255, 255, 255, 1] }),
-        stroke: new Stroke({ color: [0, 0, 0, 1] }),
-        points: 4,
-        radius: 10,
-        radius2: 0,
-        angle: Math.PI / 4
-      })
-    }),
-    'LineString': new Style({
-      stroke: new Stroke({
-        color: 'green',
-        width: 1
-      })
-    }),
-    'MultiLineString': new Style({
-      stroke: new Stroke({
-        color: 'green',
-        width: 1
-      })
-    }),
-    // 'MultiPoint': new Style({
-    //   image: image
-    // }),
-    'MultiPolygon': new Style({
-      stroke: new Stroke({
-        color: 'yellow',
-        width: 1
-      }),
-      fill: new Fill({
-        color: 'rgba(255, 255, 0, 0.1)'
-      })
-    }),
-    'Polygon': new Style({
-      stroke: new Stroke({
-        color: 'blue',
-        lineDash: [4],
-        width: 3
-      }),
-      fill: new Fill({
-        color: 'rgba(0, 0, 255, 0.1)'
-      })
-    }),
-    'GeometryCollection': new Style({
-      stroke: new Stroke({
-        color: 'magenta',
-        width: 2
-      }),
-      fill: new Fill({
-        color: 'magenta'
-      }),
-      image: new CircleStyle({
-        radius: 10,
-        fill: null,
-        stroke: new Stroke({
-          color: 'magenta'
-        })
-      })
-    }),
-    'Circle': new Style({
-      stroke: new Stroke({
-        color: 'red',
-        width: 2
-      }),
-      fill: new Fill({
-        color: 'rgba(255,0,0,0.2)'
-      })
-    })
-  };
-
-  debugger
-
-  var styleFunction = function (feature) {
-    return stylesNew[feature.getGeometry().getType()];
-  };
-
   var gridtest = new sourceVector({
     features: (new GeoJSON()).readFeatures(gjson),
     // wrapX: false
   })
-  debugger
-  var gridLayer = new Vector({
-    source: tempSourceLayer["baseGeoAll"]
-    // style: styleFunction
-  });
-  debugger
+
+  // var gridLayer = new Vector({
+  //   source: grid
+  // });
+
   // map.addLayer(gridLayer)
-  debugger
+
   var select = new Select();
   map.addInteraction(select);
 
@@ -330,10 +246,10 @@ export function selectCustom(map) {
     //only draw when Ctrl is pressed.
     // condition : ol.events.condition.platformModifierKeyOnly
   });
-
+  
   tempInteract["interactive"] = draw
   map.addInteraction(tempInteract["interactive"]);
-
+  
   debugger
   draw.on('drawstart', function (e) {
     // debugger
@@ -343,6 +259,11 @@ export function selectCustom(map) {
     select.setActive(false);
   })
 
+  // 
+  // draw.setActive(false)
+
+  
+  var arrayAvgGraph = []
   draw.on('drawend', function (e) {
     debugger
     e.preventDefault();
@@ -352,96 +273,126 @@ export function selectCustom(map) {
     // div
 
 
-
+    var tempFeature = []
+    var sumt = 0
     var poly = e.feature.getGeometry()
-
-    var state = 0
-    var sum = 0
-    var max = 0
-    var min = 0
-    // var tempFeatrueinpoly = []
+    var tempFeatrueinpoly = []
     ///////////////////////// Map Now //////////////////////
-    // tempFeatrueinpoly.push("ssss")
-    var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
-    debugger
-    console.log(tempSend["lat_list"])
-    console.log(tempSend["lon_list"])
 
-    var temp_lat_long_index = []
-    // var features = grid.getFeatures()
+    var features = grid.getFeatures()
     for (var i = 0; i < features.length; i++) {
       if (poly.intersectsExtent(features[i].getGeometry().getExtent())) {
-        var obj = features[i].getProperties()
-        if (state == 0) {
-          max = obj["value"]
-          min = obj["value"]
-          state += 1
-        }
-        if (obj["value"] > max) {
-          max = obj["value"]
-        } else if (obj["value"] < min) {
-          min = obj["value"]
-        }
-        debugger
-        sum += obj["value"]
-        var temp = find_index_lat_long(obj["lat"], obj["lon"])
-        temp_lat_long_index.push(temp)
-
+        tempFeature.push(features[i])
+        tempFeatrueinpoly.push(i)
+        sumt += features[i].getProperties().value
       }
     }
+    // console.log("Feature length : ", tempFeature.length)
+    // console.log("Feature : ", tempFeature)
+    $(".meanStat").html((sumt / tempFeature.length).toFixed(2))
+    console.log(tempFeature.length)
+    ///////////////////////// for Graph ///////////////////////
+    // for (var i = 0; i < gridList.length; i++) {
+    //   tempFeature = []
+    //   sumt = 0
+    //   var gridTemp = new souceVector({
+    //     features: (new GeoJSON()).readFeatures(gridList[i]),
+    //   })
+    //   var features = gridTemp.getFeatures()
 
-    $('.meanStat').html((sum / temp_lat_long_index.length).toFixed(2))
-    $(".maxStat").html(max.toFixed(2))
-    $(".minStat").html(min.toFixed(2))
+    //   tempFeatrueinpoly.forEach(function(e){
+    //     try {
+    //       tempFeature.push(features[e])
+    //       sumt += features[e].getProperties().value
+    //     }catch(err) {
+    //       tempFeature.push(undefined)
+    //     }
+    //     if(i > gridList.length - 2){
+    //       debugger
+    //     }
+    //   })  
 
-    console.log(temp_lat_long_index)
-    fetch(`${domainIP}/api/getdata/selectGraph/`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(
-        {
-          custom: temp_lat_long_index,
-          type_dataset: tempSend["dataset"],
-          yearInit: tempSend["year_global"][0],
-          yearEnd: tempSend["year_global"][1],
-          type_index: tempSend["index_name"]
+    //   arrayAvgGraph.push(parseFloat((sumt / tempFeature.length).toFixed(2)))
+
+    // }
+    var gridListAnn = gridList["Ann"]
+    AsynTest(function () {
+      for (var i = 0; i < gridListAnn.length; i++) {
+        tempFeature = []
+        sumt = 0
+        var gridTemp = new souceVector({
+          features: (new GeoJSON()).readFeatures(gridListAnn[i]),
+        })
+        var features = gridTemp.getFeatures()
+        for (var j = 0; j < features.length; j++) {
+          if (poly.intersectsExtent(features[j].getGeometry().getExtent())) {
+            tempFeature.push(features[j])
+            sumt += features[j].getProperties().value
+          }
         }
-      )
-    }).then(function (res) {
-      return res.json();
-    }).then(function (result) {
-
-      highchartsModule["HighchartAVG"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVG"]["axisY"],
-        color: "green"
-      })
-      highchartsModule["HighchartAVG_ANN"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVGAnn"]["axisY"],
-        color: "purple"
-      })
-      highchartsModule["HighchartSeason"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphSeasonal"]["axisY"],
-        color: "black"
-      })
-
+        arrayAvgGraph.push(parseFloat((sumt / tempFeature.length).toFixed(2)))
+      }
+      genChart("graphSelect", arrayAvgGraph, tempSend["date_list"], tempSend["name_index"], "Average Select Custom", tempSend["name_graphS"], tempSend["ylabel"], tempSend["unit"], "#FEBDBD", "spline")
+      // debugger
+      tempFeatrueinpoly = []
+      arrayAvgGraph = []
     })
 
+    calSeasonCustom(gridList, tempSend["season"],poly)
+
+    console.log("SSSSSSSSS xxxxxxxxxxxxxxxxxxx SSSSSSSSSSSSSSSSS")
+    // for (var i = 0; i < gridList.length; i++) {
+    //   tempFeature = []
+    //   sumt = 0
+    //   var gridTemp = new souceVector({
+    //     features: (new GeoJSON()).readFeatures(gridList[i]),
+    //   })
+    //   var features = gridTemp.getFeatures()
+    //   for (var j = 0; j < features.length; j++) {
+    //     if (poly.intersectsExtent(features[j].getGeometry().getExtent())) {
+    //       tempFeature.push(features[j])
+    //       sumt += features[j].getProperties().value
+    //     }
+    //   }
+
+    //   arrayAvgGraph.push(parseFloat((sumt / tempFeature.length).toFixed(2)))
+    // }
+
+   
+
+    // var poly = e.feature.getGeometry()
+
+    // var features = grid.getFeatures()
+    // var tempFeature = []
+    // var sumt = 0
+    // for (var i = 0; i < features.length; i++) {
+    //   if (poly.intersectsExtent(features[i].getGeometry().getExtent())) {
+    //     tempFeature.push(features[i])
+    //     sumt += features[i].getProperties().value
+    //   }
+    // }
+
+    // console.log("Feature : ",tempFeature)
+    // debugger
+    // var extent = e.feature.getGeometry().getExtent();
+    // // [97.6958535023023, 9.509734747562465, 106.74169874998367, 19.019469495124923]
+    // // debugger
+    // grid.forEachFeatureIntersectingExtent(extent, function(feature) {
+    //     featureTemp.push(feature);
+    // });
+
+    // setTimeout(function(){ 
+    //     select.setActive(true); 
+    // }, 300);
+    // var sum_total = 0
+    // for(var i=0;i<featureTemp.length;i++){
+    //     sum_total += featureTemp[i].get('value')
+    // }
+    // console.log(sum_total/featureTemp.length)
 
   });
 }
 
-
-var find_index_lat_long = function (lat, lon, lat_list = tempSend["lat_list"], lon_list = tempSend["lon_list"]) {
-  var index_lat = lat_list.indexOf(lat)
-  var index_lon = lon_list.indexOf(lon)
-  return [index_lat, index_lon]
-}
 
 function AsynTest(callback) {
   setTimeout(function () {
@@ -449,59 +400,59 @@ function AsynTest(callback) {
   }, 1)
 }
 
-// function calSeasonCustom(listData, seasonArr, poly) {
-//   var tempSeasonData = []
-//   seasonArr = seasonArr.slice(1, seasonArr.length)
-//   for (var i = 0; i < seasonArr.length; i++) {
-//     tempSeasonData.push(undefined)
-//   }
-
-//   for (var i = 0; i < seasonArr.length; i++) {
-//     var sumout = 0
-//     var tempFeature = []
-//     // debugger
-//     for (var k = 0; k < listData[seasonArr[i]].length; k++) {
-//       var sumin = 0
-//       var gridTemp = new souceVector({
-//         features: (new GeoJSON()).readFeatures(listData[seasonArr[i]][k]),
-//       })
-//       var features = gridTemp.getFeatures()
-//       // debugger
-//       for (var j = 0; j < features.length; j++) {
-//         if (poly.intersectsExtent(features[j].getGeometry().getExtent())) {
-//           tempFeature.push(features[j])
-//           sumin += features[j].getProperties().value
-//           // console.log(seasonArr[i], k, features[j].getProperties().value)
-//         }
-//       }
-//       // debugger
-//       sumout += (sumin / tempFeature.length)
-//       tempFeature = []
-//       // tempSeasonData[i] = parseFloat((sumin / tempFeature.length).toFixed(2))
-//       // tempFeature = []
-//       // arrayAvgGraph.push(parseFloat((sumt / tempFeature.length).toFixed(2)))
-//     }
-//     tempSeasonData[i] = parseFloat((sumout / listData[seasonArr[i]].length).toFixed(2))
-//   }
-//   console.log(tempSeasonData)
-//   // debugger
-//   // var arrayMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-//   // AsynTest(function(){
-//   //   var index = 0
-//   genChart("graphSelectSeasonal",
-//     tempSeasonData,
-//     seasonArr,
-//     tempSend["name_index"],
-//     "Seasonal Select Custom",
-//     tempSend["name_graphS"],
-//     tempSend["ylabel"],
-//     tempSend["unit"],
-//     "#FEBDBD",
-//     "spline"
-//   )
-//   tempSeasonData = []
-//   // })
-// }
+function calSeasonCustom(listData, seasonArr, poly){
+  var tempSeasonData = []
+  seasonArr = seasonArr.slice(1,seasonArr.length)
+  for(var i = 0; i< seasonArr.length; i++){
+    tempSeasonData.push(undefined)
+  }
+  
+  for( var i = 0; i < seasonArr.length; i++){
+    var sumout = 0
+    var tempFeature = []
+    // debugger
+    for (var k = 0; k < listData[seasonArr[i]].length; k++) {
+      var sumin = 0
+      var gridTemp = new souceVector({
+        features: (new GeoJSON()).readFeatures(listData[seasonArr[i]][k]),
+      })
+      var features = gridTemp.getFeatures()
+      // debugger
+      for (var j = 0; j < features.length; j++) {
+        if (poly.intersectsExtent(features[j].getGeometry().getExtent())) {
+          tempFeature.push(features[j])
+          sumin += features[j].getProperties().value
+          // console.log(seasonArr[i], k, features[j].getProperties().value)
+        }
+      }
+      // debugger
+      sumout += (sumin / tempFeature.length)
+      tempFeature = []
+      // tempSeasonData[i] = parseFloat((sumin / tempFeature.length).toFixed(2))
+      // tempFeature = []
+      // arrayAvgGraph.push(parseFloat((sumt / tempFeature.length).toFixed(2)))
+    }
+    tempSeasonData[i] = parseFloat((sumout / listData[seasonArr[i]].length).toFixed(2))
+  }
+  console.log(tempSeasonData)
+  // debugger
+  // var arrayMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  // AsynTest(function(){
+  //   var index = 0
+  genChart("graphSelectSeasonal", 
+          tempSeasonData, 
+          seasonArr, 
+          tempSend["name_index"], 
+          "Seasonal Select Custom", 
+          tempSend["name_graphS"], 
+          tempSend["ylabel"], 
+          tempSend["unit"], 
+          "#FEBDBD", 
+          "spline"
+        )
+  tempSeasonData = []
+  // })
+}
 
 export function selectOnePoint(map) {
   console.log("################### Select One Point ###################")
@@ -564,15 +515,33 @@ export function selectOnePoint(map) {
 export function selectFeatureCountry(map, gridList, geoVector, gridData, year, typeUse) {
 
   console.log("################### Select Country #########################")
+  // var startTime = undefined;
+  // startTime = new Date().getTime()
+  // fetch("http://127.0.0.1:3000/api/getmap/rawdata2D/GHCN/1951-01-01/2010-01-01/TXx/").then(function (res){
+  //     return res.json();
+  // }).then(function(resultAll){
+  //     console.log(resultAll)
+  //     alert("rawdata2D")
+  //     alert(new Date().getTime() - startTime)
+  //     debugger
+  // })
 
+  // fetch("http://127.0.0.1:3000/api/getmap/rawdata/GHCN/1951-01-01/2010-01-01/TXx/").then(function (res){
+  //     return res.json();
+  // }).then(function(resultAll){
+  //     console.log(resultAll)
+  //     alert("rawdata")
+  //     alert(new Date().getTime() - startTime)
+  //     debugger
+  // })
   map.removeLayer(tempMapLayer["baselayer"])
-  if (tempMapLayer["interactive"] != undefined) {
+  if(tempMapLayer["interactive"] != undefined){
     map.removeLayer(tempMapLayer["interactive"])
     tempMapLayer["interactive"] = undefined
     console.log(tempMapLayer)
   }
-  if (tempInteract["interactive"] != undefined) {
-    map.removeInteraction(tempInteract["interactive"])
+  if(tempInteract["interactive"] != undefined){
+    map.removeInteraction(tempInteract["interactive"]) 
     tempInteract["interactive"] = undefined
   }
   debugger
@@ -768,11 +737,11 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
 
   tempMapLayer["interactive"] = geoVector
   map.addLayer(tempMapLayer["interactive"])
-
+  
   var selectClick = new Select({
     condition: click
   })
-  tempInteract["interactive"] = selectClick
+  tempInteract["interactive"] = selectClick 
   map.addInteraction(tempInteract["interactive"])
   debugger
   console.log(year)
@@ -787,86 +756,22 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     // console.log(coors)
     // console.log(find_lat_lon(coors[0][0][1]))
     // console.log(coors.length)
-    // var features = tempSourceLayer["baseGeoAll"].getFeatures()
-    var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
-    debugger
-    console.log(tempSend["lat_list"])
-    console.log(tempSend["lon_list"])
-
-    var state = 0
-    var sum = 0
-    var max = 0
-    var min = 0
-
-
-    var temp_lat_long_index = []
+    var features = gridData.getFeatures()
+    // var ext = e.selected[0].getGeometry().getExtent()
     var poly = e.selected[0].getGeometry()
-    // var features = grid.getFeatures()
+    // var g = gridData
+    // var l = gridLayer
+    var tempFeature = []
+    var sumt = 0
     for (var i = 0; i < features.length; i++) {
       if (poly.intersectsExtent(features[i].getGeometry().getExtent())) {
-
-        var obj = features[i].getProperties()
-        if (state == 0) {
-          max = obj["value"]
-          min = obj["value"]
-          state += 1
-        }
-        if (obj["value"] > max) {
-          max = obj["value"]
-        } else if (obj["value"] < min) {
-          min = obj["value"]
-        }
-        debugger
-        sum += obj["value"]
-        var temp = find_index_lat_long(obj["lat"], obj["lon"])
-        temp_lat_long_index.push(temp)
-
+        tempFeature.push(features[i])
+        sumt += features[i].getProperties().value
       }
     }
-    debugger
-    $('.meanStat').html((sum / temp_lat_long_index.length).toFixed(2))
-    $(".maxStat").html(max.toFixed(2))
-    $(".minStat").html(min.toFixed(2))
-
-    console.log(temp_lat_long_index)
-    fetch(`${domainIP}/api/getdata/selectGraph/`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(
-        {
-          custom: temp_lat_long_index,
-          type_dataset: tempSend["dataset"],
-          yearInit: tempSend["year_global"][0],
-          yearEnd: tempSend["year_global"][1],
-          type_index: tempSend["index_name"]
-        }
-      )
-    }).then(function (res) {
-      return res.json();
-    }).then(function (result) {
-
-      highchartsModule["HighchartAVG"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVG"]["axisY"],
-        color: "green"
-      })
-      highchartsModule["HighchartAVG_ANN"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVGAnn"]["axisY"],
-        color: "purple"
-      })
-      highchartsModule["HighchartSeason"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphSeasonal"]["axisY"],
-        color: "black"
-      })
-
-    })
-
-    debugger
+    console.log("Mean : ", sumt / tempFeature.length)
+    $(".meanStat").html((sumt / tempFeature.length).toFixed(2))
+    console.log("Feature : ", tempFeature)
 
     // var i =0
     // g.forEachFeatureIntersectingExtent(ext, (f)=>{
@@ -918,4 +823,17 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     // })
 
   })
+}
+
+function find_lat_lon(num_lat_lon, gridsize = 1) {
+  var num_lat_lon = parseFloat(num_lat_lon).toFixed(2)
+  //num_lat_lon = float(num_lat_lon)
+  //tempN =  round(num_lat_lon, 2)
+
+  if (gridsize == 1) {
+    var num_lat_lon_s = num_lat_lon.toString().split(".")
+    //var last = parseFloat(num_lat_lon_s[1][0])
+    num_lat_lon_s[0] = parseFloat(num_lat_lon_s[0])
+    return parseFloat(num_lat_lon_s[0] + .5)
+  }
 }

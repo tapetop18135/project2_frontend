@@ -7,8 +7,12 @@
   </div>
   <div class="row" style="text-align: center">
     <h4 class="nameMap" style="width: 100%; height: 5%;">Map Type :
-      <span class="typeMapShow"></span> Year Period :
-      <span class="dateRange1"></span> - <span class="dateRange2"></span>
+      <span class="typeMapShow"></span> 
+      Index : <span class="typeIndex"></span> 
+      <br>
+      Year Period :
+      <span class="dateRange1"></span> -
+      <span class="dateRange2"></span>
       <!-- <span class="monthShow"></span> Day :
       <span class="dayShow"></span> -->
     </h4>
@@ -18,12 +22,12 @@
       <div class="card" style="width: 100%; height: 700px;">
         <h4 class="card-header">Customize</h4>
         <div class="card-body customize">
-          <div class="step1" style="width: 100%; height: 100%;">
+          <!-- <div class="step1" style="width: 100%; height: 100%;">
             STEP 1
             <div style="width: 100%; height: 370px;">
               <div class="step1S" style="padding: 50% 0">
                 <form id="formS1">
-                  
+
                   <input class="S1" id="S1-1" type="radio" name="step1S" value="RD">
                   <label for="S1-1">Raw Data</label>
                   <br>
@@ -35,11 +39,11 @@
             <hr>
             <div style="width: 100%; height: 20%;">
               <button class="next">next</button>
-              <!-- <a class="next" href="#">next</a> -->
+              
             </div>
 
-          </div>
-          <div class="step2" style="display: none; width: 100%; height: 100%;">
+          </div> -->
+          <div class="step2" style="width: 100%; height: 100%;">
             STEP 2
             <div class="step2-2" style="">
               <div style="width: 100%; height: 450px;">
@@ -100,7 +104,7 @@
             </div>
             <hr>
             <div style="width: 100%; height: 80%;">
-              <button class="pre">pre</button>
+              <!-- <button class="pre">pre</button> -->
               <button class="next">next</button>
             </div>
           </div>
@@ -140,12 +144,47 @@
       </div>
     </div>
     <div class="col-sm-7">
-      <div class="card" style="width: 100%; height: 100%;">
-        <div class="overlayMap" style="width: 100%; height: 90%;">
-          <img src="./gifAnimate/103 (1).gif" alt="">
-        </div>
-        <div id="mapV" class="mapV" style="width: 100%; height: 90%;"></div>
+      <!-- <div class="card" style="width: 100%; height: 100%;">
+        <div id="mapAVG" class="mapAVG" style="width: 100%; height: 90%;"></div>
         <div style="width: 100%; height: 10%;"></div>
+      </div> -->
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card" style="width: 100%; height: 100%;">
+
+            <p style="text-align: center">Average</p>
+            <div id="mapAVG" class="mapAVG" style="width: 100%; height: 90%;"></div>
+            <div style="width: 100%; height: 10%;"></div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+
+          <div class="card" style="width: 100%; height: 100%;">
+
+            <p style="text-align: center">Trend</p>
+            <div id="mapTrend" class="mapTrend" style="width: 100%; height: 90%;"></div>
+            <div style="width: 100%; height: 10%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-sm-6">
+
+          <div class="card" style="width: 100%; height: 100%;">
+            <p style="text-align: center">Eof <span class="eof_index"></span> </p>
+            <div id="mapPCA" class="mapPCA" style="width: 100%; height: 90%;"></div>
+            <div style="width: 100%; height: 10%;"></div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card" style="width: 100%; height: 100%;">
+
+            <p style="text-align: center">Eof RAW</p>
+            <div id="mapPCA_real" class="mapPCA_real" style="width: 100%; height: 90%;"></div>
+            <div style="width: 100%; height: 10%;"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-sm-2">
@@ -174,18 +213,19 @@
             <p class="modeStat">--</p>
           </h5>
         </div> -->
-        
+
       </div>
     </div>
   </div>
   <div>
     <div style="text-align: center">
-      <div style="margin: 5px;width: 40%; display: inline-block ;" id="graph1"></div>
-      <div style="margin: 5px;width: 40%; display: inline-block ;" id="chartSeason"></div>
+      <div style="margin: 5px;width: 32%; display: inline-block ;" id="chartAvg"></div>
+      <div style="margin: 5px;width: 32%; display: inline-block ;" id="chartSeason"></div>
+      <div style="margin: 5px;width: 32%; display: inline-block ;" id="chartAvgANN"></div>
     </div>
     <div style="text-align: center">
-      <div style="margin: 5px;width: 40%; display: inline-block ;" id="graphSelect"></div>
-      <div style="margin: 5px;width: 40%; display: inline-block ;" id="graphSelectSeasonal"></div>
+      <div style="margin: 5px;width: 40%; display: inline-block ;" id="chartPCA"></div>
+      <div style="margin: 5px;width: 40%; display: inline-block ;" id="chartPCA_variance"></div>
     </div>
     <!-- <div class="graph set_margin_middle">
       <div class="row">

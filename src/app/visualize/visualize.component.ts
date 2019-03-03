@@ -6,7 +6,7 @@ import * as chartT from '../libCustom/chartV'
 
 
 import * as visualizeJS from '../libCustom/main/visualize.js'
-import * as interactR from '../libCustom/main/mapInteract'
+import * as interactR from '../libCustom/main/mapInteract.js'
 
 import { ThrowStmt } from '@angular/compiler';
 
@@ -22,28 +22,28 @@ export class VisualizeComponent implements OnInit {
   private yearStart: string;
   private yearStop: string;
 
-  selectArr = ["- Non select -","Select One Point", "Select Country", "Select Custom"]
+  selectArr = ["- Non select -", "Select Country", "Select Custom"]
   selectedOnMap: string = this.selectArr[0]
 
   selectPeriod = ["- Non select -","January", "February", "March", "April", "May", "June", "July", "August	", "September", "October", "November", "December"]
   selectedPeriod: string = this.selectPeriod[0]
 
-  selectYear = this.genYear(1951, 2010)
+  selectYear = this.genYear(1951, 2017)
   selectedYear: string = this.selectYear[0]
 
-  selectPeriod2 = ["- Non select -","January", "February", "March", "April", "May", "June", "July", "August	", "September", "October", "November", "December"]
+  selectPeriod2 = ["- Non select -","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   selectedPeriod2: string = this.selectPeriod[0]
 
-  selectYear2 = this.genYear(1951, 2010)
+  selectYear2 = this.genYear(1951, 2017)
   selectedYear2: string = this.selectYear2[0]
 
   selectArea = ["- Non select -","World", "Asia", "Africa", "South America", "North America", "Australia", "Europe"]
   selectedArea: string = this.selectArea[0]
 
-  select_dataType = ["- Non select -", "GHCN"]
+  select_dataType = ["- Non select -", "ghcndex"]
   selecteddataType: string = this.select_dataType[0]
 
-  select_dataTypeIndex = ["- Non select -", "TXx", "TNn", "TXx PCA", "TNn PCA"]
+  select_dataTypeIndex = ["- Non select -", 'CDD', 'CSDI', 'CWD', 'DTR', 'FD', 'GSL', 'ID', 'PRCPTOT', 'R10mm', 'R20mm', 'R95pT', 'R95p', 'R99p', 'Rx1day', 'Rx5day', 'SDII', 'SU', 'TN10p', 'TN90p', 'TNn', 'TNx', 'TR', 'TX10p', 'TX90p', 'TXn', 'TXx', 'WSDI']
   selecteddataTypeIndex: string = this.select_dataType[0]
 
 
@@ -67,40 +67,22 @@ export class VisualizeComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    // this.yearStart = "1950-02-01"
-    // this.yearStop = "1950-02-01"
-    // this.yearStart = "2010-08-01"
-    // this.yearStop = "2010-08-01"
-    // this.map = this.onloadMap(true, this.yearStart, this.yearStop, this.selecteddataType) 
-    // console.log(this.map )
-    // this.onSelectFeature(this.selectedOnMap)
-
-   
-
-    // var mock_data0 = this.mockup_data_gen()
-    // var mock_data1 = this.mockup_data_gen()
-    // // mapT.genMapOLV('mapV')
-    // chartT.genGraphV('graphV', mock_data0, mock_data1)
-    // // mock_data = []
-    // var mock_data0 = this.mockup_data_gen()
-    // var mock_data1 = this.mockup_data_gen()
-    
-    // chartT.genGraphV('graphV1', mock_data0, mock_data1)
     
     visualizeJS
+    interactR
   }
   
 
   onSelectFeature(name_select){
     if(this.map === undefined){
-      this.map = visualizeJS.map
+      this.map = visualizeJS.map_all["map_avg"]
     }
     
     if(name_select === "Select One Point"){
       interactR.selectOnePoint(this.map)
     }
     else if(name_select === "Select Custom"){
-      interactR.selectCustom(this.map, visualizeJS.GeoJsonList, visualizeJS.grid)
+      interactR.selectCustom(this.map)
     }
     else if(name_select === "Select Country"){
       var vectorGeo = visualizeJS.vectorLayerGeo 
@@ -121,19 +103,6 @@ export class VisualizeComponent implements OnInit {
   onSelectMap(name_t){
     // this.map = this.onloadMap(true, '1990-06-1', name) 
     visualizeJS.update_getGee(true, this.yearStart, this.yearStop, name_t, this.map)
-  }
-
-
-  // mockup_data_gen(){
-  //   var mock_data = []
-  //   for(var i = 0; i < 11; i++){
-  //     mock_data.push(Math.floor(Math.random() * Math.floor(30)))
-  //   }
-  //   return mock_data
-  // }
-
-  onloadMap(isReduce, year1, year2, type_data): void{
-    // return visualizeJS.getGee(isReduce, year1, year2, type_data)
   }
 
 }
