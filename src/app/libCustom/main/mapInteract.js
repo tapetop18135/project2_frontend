@@ -355,46 +355,22 @@ export function selectCustom(map) {
 
     var poly = e.feature.getGeometry()
 
-    var state = 0
-    var sum = 0
-    var max = 0
-    var min = 0
+
     // var tempFeatrueinpoly = []
     ///////////////////////// Map Now //////////////////////
     // tempFeatrueinpoly.push("ssss")
-    var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
-    debugger
-    console.log(tempSend["lat_list"])
-    console.log(tempSend["lon_list"])
-
-    var temp_lat_long_index = []
-    // var features = grid.getFeatures()
+    var temp_lat_long_index0 = []
+    var features = tempSourceLayer["baseGeoAll"].getFeatures()
     for (var i = 0; i < features.length; i++) {
       if (poly.intersectsExtent(features[i].getGeometry().getExtent())) {
         var obj = features[i].getProperties()
-        if (state == 0) {
-          max = obj["value"]
-          min = obj["value"]
-          state += 1
-        }
-        if (obj["value"] > max) {
-          max = obj["value"]
-        } else if (obj["value"] < min) {
-          min = obj["value"]
-        }
-        debugger
-        sum += obj["value"]
         var temp = find_index_lat_long(obj["lat"], obj["lon"])
-        temp_lat_long_index.push(temp)
+        temp_lat_long_index0.push(temp)
 
       }
     }
 
-    $('.meanStat').html((sum / temp_lat_long_index.length).toFixed(2))
-    $(".maxStat").html(max.toFixed(2))
-    $(".minStat").html(min.toFixed(2))
-
-    console.log(temp_lat_long_index)
+    console.log(temp_lat_long_index0)
     fetch(`${domainIP}/api/getdata/selectGraph/`, {
       method: 'post',
       headers: {
@@ -403,7 +379,7 @@ export function selectCustom(map) {
       },
       body: JSON.stringify(
         {
-          custom: temp_lat_long_index,
+          custom: temp_lat_long_index0,
           type_dataset: tempSend["dataset"],
           yearInit: tempSend["year_global"][0],
           yearEnd: tempSend["year_global"][1],
@@ -411,9 +387,10 @@ export function selectCustom(map) {
         }
       )
     }).then(function (res) {
+      // debugger
       return res.json();
     }).then(function (result) {
-
+      debugger
       highchartsModule["HighchartAVG"].addSeries({
         name: `${result["detail"]["detail"]["index_name"]} Custom`,
         data: result["graph"]["graphAVG"]["axisY"],
@@ -431,6 +408,45 @@ export function selectCustom(map) {
       })
 
     })
+
+    var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
+    debugger
+    console.log(tempSend["lat_list"])
+    console.log(tempSend["lon_list"])
+
+    var state = 0
+    var sum = 0
+    var max = 0
+    var min = 0
+
+    var temp_lat_long_index = []
+    // var features = grid.getFeatures()
+    for (var i = 0; i < features.length; i++) {
+      if (poly.intersectsExtent(features[i].getGeometry().getExtent())) {
+        var obj = features[i].getProperties()
+        if (state == 0) {
+          max = obj["value"]
+          min = obj["value"]
+          state += 1
+        }
+        if (obj["value"] > max) {
+          max = obj["value"]
+        } else if (obj["value"] < min) {
+          min = obj["value"]
+        }
+        // debugger
+        sum += obj["value"]
+        var temp = find_index_lat_long(obj["lat"], obj["lon"])
+        temp_lat_long_index.push(temp)
+
+      }
+    }
+    debugger
+    $('.meanStat').html((sum / temp_lat_long_index.length).toFixed(2))
+    $(".maxStat").html(max.toFixed(2))
+    $(".minStat").html(min.toFixed(2))
+
+
 
 
   });
@@ -788,19 +804,73 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     // console.log(find_lat_lon(coors[0][0][1]))
     // console.log(coors.length)
     // var features = tempSourceLayer["baseGeoAll"].getFeatures()
-    var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
+    
+    var poly = e.selected[0].getGeometry()
+
+
+    
     debugger
     console.log(tempSend["lat_list"])
     console.log(tempSend["lon_list"])
+
+    var temp_lat_long_index0 = []
+    var features = tempSourceLayer["baseGeoAll"].getFeatures()
+    for (var i = 0; i < features.length; i++) {
+      if (poly.intersectsExtent(features[i].getGeometry().getExtent())) {
+        var obj = features[i].getProperties()
+        var temp = find_index_lat_long(obj["lat"], obj["lon"])
+        temp_lat_long_index0.push(temp)
+
+      }
+    }
+
+    console.log(temp_lat_long_index0)
+    fetch(`${domainIP}/api/getdata/selectGraph/`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(
+        {
+          custom: temp_lat_long_index0,
+          type_dataset: tempSend["dataset"],
+          yearInit: tempSend["year_global"][0],
+          yearEnd: tempSend["year_global"][1],
+          type_index: tempSend["index_name"]
+        }
+      )
+    }).then(function (res) {
+      // debugger
+      return res.json();
+    }).then(function (result) {
+      debugger
+      highchartsModule["HighchartAVG"].addSeries({
+        name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,
+        data: result["graph"]["graphAVG"]["axisY"],
+        color: "green"
+      })
+      highchartsModule["HighchartAVG_ANN"].addSeries({
+        name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,
+        data: result["graph"]["graphAVGAnn"]["axisY"],
+        color: "purple"
+      })
+      highchartsModule["HighchartSeason"].addSeries({
+        name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,
+        data: result["graph"]["graphSeasonal"]["axisY"],
+        color: "black"
+      })
+
+    })
 
     var state = 0
     var sum = 0
     var max = 0
     var min = 0
 
-
+    var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
     var temp_lat_long_index = []
-    var poly = e.selected[0].getGeometry()
+
     // var features = grid.getFeatures()
     for (var i = 0; i < features.length; i++) {
       if (poly.intersectsExtent(features[i].getGeometry().getExtent())) {
@@ -828,43 +898,43 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     $(".maxStat").html(max.toFixed(2))
     $(".minStat").html(min.toFixed(2))
 
-    console.log(temp_lat_long_index)
-    fetch(`${domainIP}/api/getdata/selectGraph/`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(
-        {
-          custom: temp_lat_long_index,
-          type_dataset: tempSend["dataset"],
-          yearInit: tempSend["year_global"][0],
-          yearEnd: tempSend["year_global"][1],
-          type_index: tempSend["index_name"]
-        }
-      )
-    }).then(function (res) {
-      return res.json();
-    }).then(function (result) {
+    // console.log(temp_lat_long_index)
+    // fetch(`${domainIP}/api/getdata/selectGraph/`, {
+    //   method: 'post',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(
+    //     {
+    //       custom: temp_lat_long_index,
+    //       type_dataset: tempSend["dataset"],
+    //       yearInit: tempSend["year_global"][0],
+    //       yearEnd: tempSend["year_global"][1],
+    //       type_index: tempSend["index_name"]
+    //     }
+    //   )
+    // }).then(function (res) {
+    //   return res.json();
+    // }).then(function (result) {
 
-      highchartsModule["HighchartAVG"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVG"]["axisY"],
-        color: "green"
-      })
-      highchartsModule["HighchartAVG_ANN"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVGAnn"]["axisY"],
-        color: "purple"
-      })
-      highchartsModule["HighchartSeason"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphSeasonal"]["axisY"],
-        color: "black"
-      })
+    //   highchartsModule["HighchartAVG"].addSeries({
+    //     name: `${result["detail"]["detail"]["index_name"]} Custom`,
+    //     data: result["graph"]["graphAVG"]["axisY"],
+    //     color: "green"
+    //   })
+    //   highchartsModule["HighchartAVG_ANN"].addSeries({
+    //     name: `${result["detail"]["detail"]["index_name"]} Custom`,
+    //     data: result["graph"]["graphAVGAnn"]["axisY"],
+    //     color: "purple"
+    //   })
+    //   highchartsModule["HighchartSeason"].addSeries({
+    //     name: `${result["detail"]["detail"]["index_name"]} Custom`,
+    //     data: result["graph"]["graphSeasonal"]["axisY"],
+    //     color: "black"
+    //   })
 
-    })
+    // })
 
     debugger
 
