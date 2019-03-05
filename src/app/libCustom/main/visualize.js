@@ -17,7 +17,7 @@ import { Fill, Stroke, Style, Text, RegularShape } from 'ol/style.js';
 
 import * as Highcharts from 'highcharts'
 
-export var domainIP = "http://13.251.157.101:8080"// "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
+export var domainIP = "http://127.0.0.1:3200" //"http://13.251.157.101:8080"// "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
 
 export var tempSend = {
     "mapAVG": undefined,
@@ -29,7 +29,7 @@ export var tempSend = {
     "graphAVG": {
         "axisX": undefined,
         "axisY": undefined,
-        "reg" : undefined,
+        "reg": undefined,
     },
     "graphSeasonal": {
         "axisX": undefined,
@@ -38,7 +38,7 @@ export var tempSend = {
     "graphAVG_ann": {
         "axisX": undefined,
         "axisY": undefined,
-        "reg" : undefined,
+        "reg": undefined,
     },
 
     "graphPCA": {
@@ -240,7 +240,6 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         if (tempSend["graphSeasonal"]["axisY"].length > 1) {
             tempSend["season"] = tempSend["graphSeasonal"]["axisY"]
         }
-
         // } else {
 
         // }
@@ -257,49 +256,44 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         `
         $(".description_index").html(descript_index)
 
+        if (tempSend["graphAVG_ann"]["axisY"].length > 0) {
+            highchartsModule["HighchartAVG_ANN"] = genChart(
+                "chartAvgANN",
+                tempSend["graphAVG_ann"]["axisY"],
+                tempSend["graphAVG_ann"]["axisX"],
+                tempSend["index_name"],
+                "Graph Ann Average Global",
+                `period ${year1} - ${year2}`,
+                tempSend["type_measure"], tempSend["unit"], "#908F8F", "line"
+            )
+            highchartsModule["HighchartAVG_ANN"].addSeries({
+                name: `linear ${result["detail"]["detail"]["index_name"]}`,
+                data: tempSend["graphAVG_ann"]["reg"],
+                color: "red"
+            })
+        }
 
-        highchartsModule["HighchartAVG_ANN"] = genChart(
-            "chartAvgANN",
-            tempSend["graphAVG_ann"]["axisY"],
-            tempSend["graphAVG_ann"]["axisX"],
-            tempSend["index_name"],
-            "Graph Ann Average Global",
-            `period ${year1} - ${year2}`,
-            tempSend["type_measure"], tempSend["unit"], "#908F8F", "line"
-        )
+        if (tempSend["graphAVG"]["axisY"].length > 0) {
 
-        highchartsModule["HighchartAVG_ANN"].addSeries({
-            name: `linear ${result["detail"]["detail"]["index_name"]}`,
-            data: tempSend["graphAVG_ann"]["reg"],
-            color: "red"
-        })
+            debugger
+            highchartsModule["HighchartAVG"] = genChart(
+                "chartAvg",
+                tempSend["graphAVG"]["axisY"],
+                tempSend["graphAVG"]["axisX"],
+                tempSend["index_name"],
+                "Graph Average Global",
+                `period ${year1} - ${year2}`,
+                tempSend["type_measure"], tempSend["unit"], "black", "line"
+            )
 
-        highchartsModule["HighchartAVG"] = genChart(
-            "chartAvg",
-            tempSend["graphAVG"]["axisY"],
-            tempSend["graphAVG"]["axisX"],
-            tempSend["index_name"],
-            "Graph Average Global",
-            `period ${year1} - ${year2}`,
-            tempSend["type_measure"], tempSend["unit"], "black", "line"
-        )
-        highchartsModule["HighchartAVG"].addSeries({
-            name: `linear ${result["detail"]["detail"]["index_name"]}`,
-            data: tempSend["graphAVG"]["reg"],
-            color: "red"
-        })
+            highchartsModule["HighchartAVG"].addSeries({
+                name: `linear ${result["detail"]["detail"]["index_name"]}`,
+                data: tempSend["graphAVG"]["reg"],
+                color: "red"
+            })
 
-        // setTimeout(() => {
-        //     console.log(highchartsModule)
-        //      
-        //     highchartsModule["HighchartAVG"].addSeries({
-        //         name: "ssssssssss",
-        //         data: tempSend["graphAVG"],
-        //         color: "red"
-        //     })
-        //      
-        // }, 5000)
-        // console.log(tempSend)
+        }
+
         if (tempSend["season"] != undefined) {
             highchartsModule["HighchartSeason"] = genChart(
                 "chartSeason",
@@ -899,26 +893,29 @@ export function genGridData(geojson, gridSize, max_min, name, ary_color) {
     var max = max_min[0]
     var min = max_min[1]
 
-    var absMin = Math.abs(min)
-    var absMax = Math.abs(max)
-    if (absMax > absMin) {
-        max = absMax
-        min = absMax * -1
-    } else {
-        max = absMin
-        min = absMin * -1
 
-    }
-    debugger
     var tem = []
     if (name == "sourceDataColorAVG") {
-        var val_max = max + Math.abs(min)
-        for (let i = 0; i < ary_color.length; i++) {
-            tem.push(max - i * (val_max / ary_color.length))
-        }
-        tem = tem.sort((a, b) => a - b)
-        console.log(tem)
+        // var val_max = max + Math.abs(min)
+        // for (let i = 0; i < ary_color.length; i++) {
+        //     tem.push(max - i * (val_max / ary_color.length))
+        // }
+        // tem = tem.sort((a, b) => a - b)
+        // console.log(tem)
+        tem = lineSpace(min, max, ary_color.length)
     } else {
+        var absMin = Math.abs(min)
+        var absMax = Math.abs(max)
+        if (absMax > absMin) {
+            max = absMax
+            min = absMax * -1
+        } else {
+            max = absMin
+            min = absMin * -1
+
+        }
+        debugger
+
         var temp0 = max / Math.floor(ary_color.length / 2)
         for (let i = 0; i < ary_color.length; i++) {
             tem.push(min)
@@ -993,6 +990,15 @@ export function genGridData(geojson, gridSize, max_min, name, ary_color) {
 
 }
 
+function lineSpace(startValue, stopValue, cardinality) {
+    var arr = [];
+    var currValue = startValue;
+    var step = (stopValue - startValue) / (cardinality - 1);
+    for (var i = 0; i < cardinality; i++) {
+        arr.push(currValue + (step * i));
+    }
+    return arr;
+}
 
 /////////////////////////////////////////////////////////
 ///////////////////////// CHART /////////////////////////
@@ -1247,7 +1253,7 @@ $(document).ready(function () {
             checkStep2()
         })
     })
-    $(".Refresh").on("click", function(e){
+    $(".Refresh").on("click", function (e) {
         e.preventDefault()
         // alert("Reflesh Page")
         location.reload();
