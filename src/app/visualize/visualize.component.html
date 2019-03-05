@@ -7,10 +7,10 @@
   </div>
   <div class="row" style="text-align: center">
     <h4 class="nameMap" style="width: 100%; height: 5%;">Map Type :
-      <span class="typeMapShow"></span> 
-      Index : <span class="typeIndex"></span> 
-      <br>
-      Year Period :
+      <span class="typeMapShow"></span>
+      Index :
+      <span class="typeIndex"></span>
+      <br> Year Period :
       <span class="dateRange1"></span> -
       <span class="dateRange2"></span>
       <!-- <span class="monthShow"></span> Day :
@@ -136,7 +136,7 @@
 
             <hr>
             <div style="width: 100%; height: 80%;">
-              <button class="pre">pre</button>
+              <button class="Refresh">Refresh</button>
             </div>
           </div>
 
@@ -153,8 +153,8 @@
           <div class="card" style="width: 100%; height: 100%;">
 
             <p style="text-align: center">Average</p>
-            <div id="mapAVG" class="mapAVG" style="width: 100%; height: 90%;"></div>
-            <div style="width: 100%; height: 10%;"></div>
+            <div id="mapAVG" class="mapAVG" style="width: 100%; height: 80%;"></div>
+            <div id="sourceDataColorAVG_legend" style="width: 90%; height: 10%; text-align: center; margin: auto"></div>
           </div>
         </div>
         <div class="col-sm-6">
@@ -162,8 +162,8 @@
           <div class="card" style="width: 100%; height: 100%;">
 
             <p style="text-align: center">Trend</p>
-            <div id="mapTrend" class="mapTrend" style="width: 100%; height: 90%;"></div>
-            <div style="width: 100%; height: 10%;"></div>
+            <div id="mapTrend" class="mapTrend" style="width: 100%; height: 80%;"></div>
+            <div id="sourceDataColorTrend_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
           </div>
         </div>
       </div>
@@ -172,17 +172,19 @@
         <div class="col-sm-6">
 
           <div class="card" style="width: 100%; height: 100%;">
-            <p style="text-align: center">Eof <span class="eof_index"></span> </p>
-            <div id="mapPCA" class="mapPCA" style="width: 100%; height: 90%;"></div>
-            <div style="width: 100%; height: 10%;"></div>
+            <p style="text-align: center">Eof
+              <span class="eof_index"></span>
+            </p>
+            <div id="mapPCA" class="mapPCA" style="width: 100%; height: 80%;"></div>
+            <div id="sourceDataColorPCA_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
           </div>
         </div>
         <div class="col-sm-6">
           <div class="card" style="width: 100%; height: 100%;">
 
             <p style="text-align: center">Eof RAW</p>
-            <div id="mapPCA_real" class="mapPCA_real" style="width: 100%; height: 90%;"></div>
-            <div style="width: 100%; height: 10%;"></div>
+            <div id="mapPCA_real" class="mapPCA_real" style="width: 100%; height: 80%;"></div>
+            <div id="sourceDataColorPCA_RAW_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
           </div>
         </div>
       </div>
@@ -190,30 +192,58 @@
     <div class="col-sm-2">
       <div class="card" style="width: 100%; height: 100%;">
         <div class="card">
-          <h5 class="card-header">Mean</h5>
+          <h4 class="card-header">Average Map</h4>
+          <p style="font-size: 20px; margin: 10px">Mean : <span class="meanAVGStat">--</span></p> 
+          <p style="font-size: 20px; margin: 10px">Max : <span class="maxAVGStat">--</span></p> 
+          <p style="font-size: 20px; margin: 10px">Min : <span class="minAVGStat">--</span></p> 
+        </div>
+        <div class="card">
+          <h4 class="card-header">Trend Map</h4>
+          <p style="font-size: 20px; margin: 10px">Mean : <span class="meanTRENDStat">--</span></p> 
+          <p style="font-size: 20px; margin: 10px">Max : <span class="maxTRENDStat">--</span></p> 
+          <p style="font-size: 20px; margin: 10px">Min : <span class="minTRENDStat">--</span></p> 
+        </div>
+
+        <div class="card">
+          <h4 class="card-header">Description of INDEX</h4>
+          <div class="description_index"></div>
+        </div>
+        <!-- <div class="card">
+          <h5 class="card-header">Max Average map</h5>
           <h5 class="card-body">
-            <p class="meanStat">--</p>
+            
           </h5>
         </div>
         <div class="card">
-          <h5 class="card-header">Max</h5>
+          <h5 class="card-header">Min Average map</h5>
           <h5 class="card-body">
-            <p class="maxStat">--</p>
+            
           </h5>
-        </div>
-        <div class="card">
-          <h5 class="card-header">Min</h5>
-          <h5 class="card-body">
-            <p class="minStat">--</p>
-          </h5>
-        </div>
+        </div> -->
         <!-- <div class="card">
           <h5 class="card-header">Mode</h5>
           <h5 class="card-body">
             <p class="modeStat">--</p>
           </h5>
         </div> -->
-
+        <!-- <div class="card">
+          <h5 class="card-header">Mean Trend map</h5>
+          <h5 class="card-body">
+            <p class="meanStat">--</p>
+          </h5>
+        </div>
+        <div class="card">
+          <h5 class="card-header">Max Trend map</h5>
+          <h5 class="card-body">
+            <p class="maxStat">--</p>
+          </h5>
+        </div>
+        <div class="card">
+          <h5 class="card-header">Min Trend map</h5>
+          <h5 class="card-body">
+            <p class="minStat">--</p>
+          </h5>
+        </div> -->
       </div>
     </div>
   </div>

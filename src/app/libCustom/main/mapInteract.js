@@ -317,9 +317,9 @@ export function selectCustom(map) {
   var drawingLayer = new Vector({
     source: drawingSource
   });
-  tempMapLayer["interactive"] = drawingLayer
+  tempMapLayer["drawingLayer"] = drawingLayer
 
-  map.addLayer(drawingLayer);
+  map.addLayer(tempMapLayer["drawingLayer"]);
   console.log(tempMapLayer)
   debugger
 
@@ -407,6 +407,18 @@ export function selectCustom(map) {
         color: "black"
       })
 
+      highchartsModule["HighchartAVG_ANN"].addSeries({
+        name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
+        data: result["graph"]["graphAVGAnn"]["TaxisY"],
+        color: "red"
+      })
+
+      highchartsModule["HighchartAVG"].addSeries({
+        name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
+        data: result["graph"]["graphAVG"]["TaxisY"],
+        color: "red"
+      })
+
     })
 
     var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
@@ -442,9 +454,7 @@ export function selectCustom(map) {
       }
     }
     debugger
-    $('.meanStat').html((sum / temp_lat_long_index.length).toFixed(2))
-    $(".maxStat").html(max.toFixed(2))
-    $(".minStat").html(min.toFixed(2))
+    setRightDisplayC((sum / temp_lat_long_index.length), max, min, "AVG")
 
 
 
@@ -577,7 +587,7 @@ export function selectOnePoint(map) {
 }
 
 
-export function selectFeatureCountry(map, gridList, geoVector, gridData, year, typeUse) {
+export function selectFeatureCountry(map, geoVector, typeUse) {
 
   console.log("################### Select Country #########################")
 
@@ -776,23 +786,24 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     // wrapX: false
   })
 
-  var gridLayer = new Vector({
-    source: gridData
-  });
+  // var gridLayer = new Vector({
+  //   source: gridData
+  // });
 
   // map.addLayer(gridLayer)
 
-  tempMapLayer["interactive"] = geoVector
-  map.addLayer(tempMapLayer["interactive"])
+  tempMapLayer["interactiveGeoCountry"] = geoVector
+  map.addLayer(tempMapLayer["interactiveGeoCountry"])
 
   var selectClick = new Select({
     condition: click
   })
+
   tempInteract["interactive"] = selectClick
   map.addInteraction(tempInteract["interactive"])
   debugger
-  console.log(year)
-  console.log(typeUse)
+  // console.log(year)
+  // console.log(typeUse)
 
   selectClick.on('select', function (e) {
     debugger
@@ -804,11 +815,11 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     // console.log(find_lat_lon(coors[0][0][1]))
     // console.log(coors.length)
     // var features = tempSourceLayer["baseGeoAll"].getFeatures()
-    
+
     var poly = e.selected[0].getGeometry()
 
 
-    
+
     debugger
     console.log(tempSend["lat_list"])
     console.log(tempSend["lon_list"])
@@ -861,6 +872,18 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
         color: "black"
       })
 
+      highchartsModule["HighchartAVG_ANN"].addSeries({
+        name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
+        data: result["graph"]["graphAVGAnn"]["TaxisY"],
+        color: "red"
+      })
+
+      highchartsModule["HighchartAVG"].addSeries({
+        name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
+        data: result["graph"]["graphAVG"]["TaxisY"],
+        color: "red"
+      })
+
     })
 
     var state = 0
@@ -894,9 +917,8 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
       }
     }
     debugger
-    $('.meanStat').html((sum / temp_lat_long_index.length).toFixed(2))
-    $(".maxStat").html(max.toFixed(2))
-    $(".minStat").html(min.toFixed(2))
+    setRightDisplayC((sum / temp_lat_long_index.length), max, min, "AVG")
+    // setRightDisplay((sum / temp_lat_long_index.length), max, min, "Trend")
 
     // console.log(temp_lat_long_index)
     // fetch(`${domainIP}/api/getdata/selectGraph/`, {
@@ -988,4 +1010,9 @@ export function selectFeatureCountry(map, gridList, geoVector, gridData, year, t
     // })
 
   })
+}
+function setRightDisplayC(avg, max, min, name) {
+  $(`.mean${name}Stat`).html(`${avg.toFixed(2)} ${(name == "AVG") ? tempSend["unit"] : `${tempSend["unit"]} / Year`}`)
+  $(`.max${name}Stat`).html(`${max.toFixed(2)} ${(name == "AVG") ? tempSend["unit"] : `${tempSend["unit"]} / Year`}`)
+  $(`.min${name}Stat`).html(`${min.toFixed(2)} ${(name == "AVG") ? tempSend["unit"] : `${tempSend["unit"]} / Year`}`)
 }

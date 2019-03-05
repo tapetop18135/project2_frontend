@@ -86,7 +86,7 @@ export class VisualizeComponent implements OnInit {
     }
     else if(name_select === "Select Country"){
       var vectorGeo = visualizeJS.vectorLayerGeo 
-      interactR.selectFeatureCountry(this.map, visualizeJS.GeoJsonList, vectorGeo, visualizeJS.grid, this.yearStart, this.selecteddataType)
+      interactR.selectFeatureCountry(this.map, vectorGeo, this.selecteddataType)
     }else{
       console.log("############## No select #################")
     }
