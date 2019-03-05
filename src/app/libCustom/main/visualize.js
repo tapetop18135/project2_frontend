@@ -17,7 +17,7 @@ import { Fill, Stroke, Style, Text, RegularShape } from 'ol/style.js';
 
 import * as Highcharts from 'highcharts'
 
-export var domainIP = "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
+export var domainIP = "http://13.251.157.101:8080"// "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
 
 export var tempSend = {
     "mapAVG": undefined,
