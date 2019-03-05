@@ -390,6 +390,7 @@ export function selectCustom(map) {
       // debugger
       return res.json();
     }).then(function (result) {
+      alert("Have Graph Custom Data ")
       debugger
       highchartsModule["HighchartAVG"].addSeries({
         name: `${result["detail"]["detail"]["index_name"]} Custom`,
@@ -855,6 +856,7 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
       // debugger
       return res.json();
     }).then(function (result) {
+      alert("Have Graph Country Data ")
       debugger
       highchartsModule["HighchartAVG"].addSeries({
         name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,

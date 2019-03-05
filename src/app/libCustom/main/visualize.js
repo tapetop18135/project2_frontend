@@ -17,7 +17,7 @@ import { Fill, Stroke, Style, Text, RegularShape } from 'ol/style.js';
 
 import * as Highcharts from 'highcharts'
 
-export var domainIP = "http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
+export var domainIP = "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
 
 export var tempSend = {
     "mapAVG": undefined,
@@ -212,7 +212,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
     fetch(urldataGRAPH).then(function (res) {
         return res.json();
     }).then(function (result) {
-
+        alert("Have Graph Data")
         // if (dataset == "GHCN") {
 
         tempSend["graphAVG"]["axisX"] = result["graph"]["graphAVG"]["axisX"]
@@ -325,6 +325,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
     fetch(urldataAVG).then(function (res) {
         return res.json();
     }).then(function (result) {
+        alert("Have Average Map")
         // if (dataset == "GHCN") {
         // debugger
         tempSend["unit"] = result["detail"]["detail"]["unit"]
@@ -388,6 +389,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
     fetch(urldataTrend).then(function (res) {
         return res.json();
     }).then(function (result) {
+        alert("Have Map Trend")
         // debugger
         // if (dataset == "GHCN") {
         console.log("Trend", result)
@@ -467,6 +469,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
     fetch(urldataPCA).then(function (res) {
         return res.json();
     }).then(function (result) {
+        alert("Have Map Pca and Graph Pca")
         // debugger
         // if (dataset == "GHCN") {
         console.log("PCA", result)
