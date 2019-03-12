@@ -81,6 +81,9 @@ export class VisualizeComponent implements OnInit {
     if(name_select === "Select One Point"){
       interactR.selectOnePoint(this.map)
     }
+    else if(name_select === "- Non select -"){
+      interactR.noSelection(this.map)
+    }
     else if(name_select === "Select Custom"){
       interactR.selectCustom(this.map)
     }

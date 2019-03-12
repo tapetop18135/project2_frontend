@@ -8,22 +8,25 @@ import souceVector from 'ol/source/Vector'
 
 import { boundingExtent } from 'ol/extent'
 import { fromLonLat, toLonLat } from 'ol/proj'
-import { genChart, tempSend, tempMapLayer, tempInteract, tempSourceLayer, domainIP, highchartsModule } from './visualize'
+import { genChart, tempSend, tempMapLayer, tempInteract, tempSourceLayer, domainIP, highchartsModule, tempChart } from './visualize'
 import { Circle as CircleStyle, RegularShape, Fill, Stroke, Style } from 'ol/style.js';
 
 
 import * as $ from 'jquery'
 
 export function selectCustom(map) {
-  debugger
-  if (tempMapLayer["interactive"] != undefined) {
-    map.removeLayer(tempMapLayer["interactive"])
-    tempMapLayer["interactive"] = undefined
-  }
-  if (tempInteract["interactive"] != undefined) {
-    map.removeInteraction(tempInteract["interactive"])
-    tempInteract["interactive"] = undefined
-  }
+  map.removeLayer(tempMapLayer["interactiveGeoCountry"])
+  map.removeLayer(tempMapLayer["baselayer"])
+  map.removeInteraction(tempInteract["interactiveSelectContry"])
+  //  
+  // if (tempMapLayer["interactive"] != undefined) {
+  //   map.removeLayer(tempMapLayer["interactive"])
+  //   tempMapLayer["interactive"] = undefined
+  // }
+  // if (tempInteract["interactive"] != undefined) {
+  //   map.removeInteraction(tempInteract["interactive"])
+  //   tempInteract["interactive"] = undefined
+  // }
 
   map.addLayer(tempMapLayer["baselayer"])
 
@@ -208,7 +211,7 @@ export function selectCustom(map) {
     ]
   }
 
-  debugger
+   
 
   // var image = new CircleStyle({
   //   radius: 5,
@@ -287,26 +290,28 @@ export function selectCustom(map) {
     })
   };
 
-  debugger
+   
 
   var styleFunction = function (feature) {
     return stylesNew[feature.getGeometry().getType()];
   };
 
-  var gridtest = new sourceVector({
-    features: (new GeoJSON()).readFeatures(gjson),
-    // wrapX: false
-  })
-  debugger
-  var gridLayer = new Vector({
-    source: tempSourceLayer["baseGeoAll"]
-    // style: styleFunction
-  });
-  debugger
+  // var gridtest = new sourceVector({
+  //   features: (new GeoJSON()).readFeatures(gjson),
+  //   // wrapX: false
+  // })
+   
+  // var gridLayer = new Vector({
+  //   source: tempSourceLayer["baseGeoAll"]
+  //   // style: styleFunction
+  // });
+   
   // map.addLayer(gridLayer)
-  debugger
+   
   var select = new Select();
-  map.addInteraction(select);
+
+  tempInteract["interactSelectCustom"] = select
+  map.addInteraction(tempInteract["interactSelectCustom"]);
 
   //////////////// ADD Drawing /////////////////
 
@@ -320,8 +325,9 @@ export function selectCustom(map) {
   tempMapLayer["drawingLayer"] = drawingLayer
 
   map.addLayer(tempMapLayer["drawingLayer"]);
+
   console.log(tempMapLayer)
-  debugger
+   
 
   // Drawing interaction
   var draw = new Draw({
@@ -331,12 +337,12 @@ export function selectCustom(map) {
     // condition : ol.events.condition.platformModifierKeyOnly
   });
 
-  tempInteract["interactive"] = draw
-  map.addInteraction(tempInteract["interactive"]);
+  tempInteract["interactiveDrawCustom"] = draw
+  map.addInteraction(tempInteract["interactiveDrawCustom"]);
 
-  debugger
+   
   draw.on('drawstart', function (e) {
-    // debugger
+    //  
     drawingSource.forEachFeature((r) => {
       drawingSource.removeFeature(r)
     })
@@ -344,7 +350,7 @@ export function selectCustom(map) {
   })
 
   draw.on('drawend', function (e) {
-    debugger
+     
     e.preventDefault();
 
     // features that intersect the box are added to the collection of
@@ -387,25 +393,26 @@ export function selectCustom(map) {
         }
       )
     }).then(function (res) {
-      // debugger
+      //  
       return res.json();
     }).then(function (result) {
-      alert("Have Graph Custom Data ")
-      debugger
-      highchartsModule["HighchartAVG"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVG"]["axisY"],
-        color: "green"
-      })
+      // alert("Have Graph Custom Data ")
+       
+      // highchartsModule["HighchartAVG"].addSeries({
+      //   name: `${result["detail"]["detail"]["index_name"]} Custom`,
+      //   data: result["graph"]["graphAVG"]["axisY"],
+      //   color: "green"
+      // })
+      // highchartsModule["HighchartAVG"].addSeries({
+      //   name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
+      //   data: result["graph"]["graphAVG"]["TaxisY"],
+      //   color: "red"
+      // })
+
       highchartsModule["HighchartAVG_ANN"].addSeries({
         name: `${result["detail"]["detail"]["index_name"]} Custom`,
         data: result["graph"]["graphAVGAnn"]["axisY"],
         color: "purple"
-      })
-      highchartsModule["HighchartSeason"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphSeasonal"]["axisY"],
-        color: "black"
       })
 
       highchartsModule["HighchartAVG_ANN"].addSeries({
@@ -414,16 +421,31 @@ export function selectCustom(map) {
         color: "red"
       })
 
-      highchartsModule["HighchartAVG"].addSeries({
-        name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVG"]["TaxisY"],
-        color: "red"
+      highchartsModule["HighchartSeason"].addSeries({
+        name: `${result["detail"]["detail"]["index_name"]} Custom`,
+        data: result["graph"]["graphSeasonal"]["axisY"],
+        color: "black"
       })
+
+      if(highchartsModule["HighchartAVG_ANN"].series.length > 6){
+        for(var i = 0; i < 2; i+=1){
+          highchartsModule["HighchartAVG_ANN"].series[2].remove()
+        }
+      }
+
+      if(highchartsModule["HighchartSeason"].series.length > 3){
+        highchartsModule["HighchartSeason"].series[1].remove()
+      }
+
+
+
+
+
 
     })
 
     var features = tempSourceLayer["sourceDataColorAVG"].getFeatures()
-    debugger
+     
     console.log(tempSend["lat_list"])
     console.log(tempSend["lon_list"])
 
@@ -447,14 +469,14 @@ export function selectCustom(map) {
         } else if (obj["value"] < min) {
           min = obj["value"]
         }
-        // debugger
+        //  
         sum += obj["value"]
         var temp = find_index_lat_long(obj["lat"], obj["lon"])
         temp_lat_long_index.push(temp)
 
       }
     }
-    debugger
+     
     setRightDisplayC((sum / temp_lat_long_index.length), max, min, "AVG")
 
 
@@ -486,14 +508,14 @@ function AsynTest(callback) {
 //   for (var i = 0; i < seasonArr.length; i++) {
 //     var sumout = 0
 //     var tempFeature = []
-//     // debugger
+//     //  
 //     for (var k = 0; k < listData[seasonArr[i]].length; k++) {
 //       var sumin = 0
 //       var gridTemp = new souceVector({
 //         features: (new GeoJSON()).readFeatures(listData[seasonArr[i]][k]),
 //       })
 //       var features = gridTemp.getFeatures()
-//       // debugger
+//       //  
 //       for (var j = 0; j < features.length; j++) {
 //         if (poly.intersectsExtent(features[j].getGeometry().getExtent())) {
 //           tempFeature.push(features[j])
@@ -501,7 +523,7 @@ function AsynTest(callback) {
 //           // console.log(seasonArr[i], k, features[j].getProperties().value)
 //         }
 //       }
-//       // debugger
+//       //  
 //       sumout += (sumin / tempFeature.length)
 //       tempFeature = []
 //       // tempSeasonData[i] = parseFloat((sumin / tempFeature.length).toFixed(2))
@@ -511,7 +533,7 @@ function AsynTest(callback) {
 //     tempSeasonData[i] = parseFloat((sumout / listData[seasonArr[i]].length).toFixed(2))
 //   }
 //   console.log(tempSeasonData)
-//   // debugger
+//   //  
 //   // var arrayMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 //   // AsynTest(function(){
 //   //   var index = 0
@@ -529,6 +551,35 @@ function AsynTest(callback) {
 //   tempSeasonData = []
 //   // })
 // }
+
+export function noSelection(map) {
+  try {
+    map.removeLayer(tempMapLayer["interactiveGeoCountry"])
+    map.removeLayer(tempMapLayer["baselayer"])
+    map.removeInteraction(tempInteract["interactiveSelectContry"])
+
+    // map.removeLayer(tempMapLayer["baselayer"])
+    map.removeLayer(tempMapLayer["drawingLayer"])
+    map.removeInteraction(tempInteract["interactiveDrawCustom"])
+    map.removeInteraction(tempInteract["interactSelectCustom"])
+    map.addLayer(tempMapLayer["baselayer"])
+  }
+  catch (err) {
+
+  }
+
+  //  
+  // if (tempMapLayer["interactive"] != undefined) {
+  //   map.removeLayer(tempMapLayer["interactive"])
+  //   tempMapLayer["interactive"] = undefined
+  // }
+  // if (tempInteract["interactive"] != undefined) {
+  //   map.removeInteraction(tempInteract["interactive"])
+  //   tempInteract["interactive"] = undefined
+  // }
+
+  
+}
 
 export function selectOnePoint(map) {
   console.log("################### Select One Point ###################")
@@ -593,16 +644,20 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
   console.log("################### Select Country #########################")
 
   map.removeLayer(tempMapLayer["baselayer"])
-  if (tempMapLayer["interactive"] != undefined) {
-    map.removeLayer(tempMapLayer["interactive"])
-    tempMapLayer["interactive"] = undefined
-    console.log(tempMapLayer)
-  }
-  if (tempInteract["interactive"] != undefined) {
-    map.removeInteraction(tempInteract["interactive"])
-    tempInteract["interactive"] = undefined
-  }
-  debugger
+  map.removeLayer(tempMapLayer["drawingLayer"])
+  map.removeInteraction(tempInteract["interactiveDrawCustom"])
+  map.removeInteraction(tempInteract["interactSelectCustom"])
+
+  // if (tempMapLayer["interactive"] != undefined) {
+  //   map.removeLayer(tempMapLayer["interactive"])
+  //   tempMapLayer["interactive"] = undefined
+  //   console.log(tempMapLayer)
+  // }
+  // if (tempInteract["interactive"] != undefined) {
+  //   map.removeInteraction(tempInteract["interactive"])
+  //   tempInteract["interactive"] = undefined
+  // }
+   
   var gjson = {
     "type": "FeatureCollection",
     "features": [
@@ -782,10 +837,10 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
     ]
   }
 
-  var gridtest = new sourceVector({
-    features: (new GeoJSON()).readFeatures(gjson),
-    // wrapX: false
-  })
+  // var gridtest = new sourceVector({
+  //   features: (new GeoJSON()).readFeatures(gjson),
+  //   // wrapX: false
+  // })
 
   // var gridLayer = new Vector({
   //   source: gridData
@@ -800,14 +855,14 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
     condition: click
   })
 
-  tempInteract["interactive"] = selectClick
-  map.addInteraction(tempInteract["interactive"])
-  debugger
+  tempInteract["interactiveSelectContry"] = selectClick
+  map.addInteraction(tempInteract["interactiveSelectContry"])
+   
   // console.log(year)
   // console.log(typeUse)
 
   selectClick.on('select', function (e) {
-    debugger
+     
     var feature_name = e.target.getFeatures().array_[0].values_.name
     var feature_id = e.target.getFeatures().array_[0].getId()
     // var coors = e.selected[0].getGeometry().getCoordinates()
@@ -821,7 +876,7 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
 
 
 
-    debugger
+     
     console.log(tempSend["lat_list"])
     console.log(tempSend["lon_list"])
 
@@ -853,38 +908,60 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
         }
       )
     }).then(function (res) {
-      // debugger
+      //  
       return res.json();
     }).then(function (result) {
-      alert("Have Graph Country Data ")
-      debugger
-      highchartsModule["HighchartAVG"].addSeries({
-        name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,
-        data: result["graph"]["graphAVG"]["axisY"],
-        color: "green"
-      })
+      // alert("Have Graph Country Data ")
+       
+      // highchartsModule["HighchartAVG"].addSeries({
+      //   name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,
+      //   data: result["graph"]["graphAVG"]["axisY"],
+      //   color: "green"
+      // })
+      // highchartsModule["HighchartAVG"].addSeries({
+      //   name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
+      //   data: result["graph"]["graphAVG"]["TaxisY"],
+      //   color: "red"
+      // })
+      // tempChart["country"].push(`${result["detail"]["detail"]["index_name"]} ${feature_name}`)
+      // tempChart["country"].push(`linear ${result["detail"]["detail"]["index_name"]} ${feature_name}`)
+
       highchartsModule["HighchartAVG_ANN"].addSeries({
         name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,
         data: result["graph"]["graphAVGAnn"]["axisY"],
         color: "purple"
       })
+      highchartsModule["HighchartAVG_ANN"].addSeries({
+        name: `linear ${result["detail"]["detail"]["index_name"]} ${feature_name}`,
+        data: result["graph"]["graphAVGAnn"]["TaxisY"],
+        color: "red"
+      })
+
+      
+
+      // var t = highchartsModule["HighchartAVG_ANN"]
+      // console.log(highchartsModule["HighchartAVG_ANN"].data)
+
+      debugger        
+
       highchartsModule["HighchartSeason"].addSeries({
         name: `${result["detail"]["detail"]["index_name"]} ${feature_name}`,
         data: result["graph"]["graphSeasonal"]["axisY"],
         color: "black"
       })
 
-      highchartsModule["HighchartAVG_ANN"].addSeries({
-        name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVGAnn"]["TaxisY"],
-        color: "red"
-      })
+      if(highchartsModule["HighchartAVG_ANN"].series.length > 6){
+        for(var i = 0; i < 2; i+=1){
+          highchartsModule["HighchartAVG_ANN"].series[2].remove()
+        }
+      }
 
-      highchartsModule["HighchartAVG"].addSeries({
-        name: `linear ${result["detail"]["detail"]["index_name"]} Custom`,
-        data: result["graph"]["graphAVG"]["TaxisY"],
-        color: "red"
-      })
+      if(highchartsModule["HighchartSeason"].series.length > 3){
+        highchartsModule["HighchartSeason"].series[1].remove()
+      }
+
+
+
 
     })
 
@@ -911,14 +988,14 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
         } else if (obj["value"] < min) {
           min = obj["value"]
         }
-        debugger
+         
         sum += obj["value"]
         var temp = find_index_lat_long(obj["lat"], obj["lon"])
         temp_lat_long_index.push(temp)
 
       }
     }
-    debugger
+     
     setRightDisplayC((sum / temp_lat_long_index.length), max, min, "AVG")
     // setRightDisplay((sum / temp_lat_long_index.length), max, min, "Trend")
 
@@ -960,7 +1037,7 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
 
     // })
 
-    debugger
+     
 
     // var i =0
     // g.forEachFeatureIntersectingExtent(ext, (f)=>{
@@ -994,7 +1071,7 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
     //             coor = data[i][0][j]
     //             tempArr.append([find_lat_lon(coor[0]), find_lat_lon(coor[1])])
 
-    // debugger
+    //  
     // $.ajax({
     //     url: "http://127.0.0.1:3000/api/findCoor",
     //     type: "post",
@@ -1004,9 +1081,9 @@ export function selectFeatureCountry(map, geoVector, typeUse) {
     //         console.log(rsult)
     //     }
     // });
-    // debugger
+    //  
     // var extent = e.target.getFeatures().array_[0].geometryChangeKey_.target.extent_
-    // debugger
+    //  
     // gridData.forEachFeatureIntersectingExtent(extent, function(feature){
     //     featureTemp.push(feature.values_.f)
     // })

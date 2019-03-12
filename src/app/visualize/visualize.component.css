@@ -60,3 +60,73 @@
 .description_index {
     margin: 10px
 }
+
+.open-menu {
+    position: fixed;
+    /* top: 50%; */
+    z-index: 1;
+    /* display: none; */
+}
+.open-menu button {
+    /* background: transparent; */
+    background: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.side-menu {
+    position: fixed;
+    width: 20%;
+    z-index: 1;
+    background: #ccc;
+    height: 100%;
+    box-shadow: 5px 5px 18px #000;
+    display: none;
+}
+
+.close-menu button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 12px;
+    /* float: right; */
+}
+.close-menu {
+    /* background: transparent;
+    border: none;
+    cursor: pointer; */
+    float: right;
+    display: none;
+    /* display: inline-block; */
+}
+
+.showMapAll{
+    display: none;
+}
+
+.step3{
+    display: none;
+}
+
+.showGraphAll {
+    display: none;
+}
+
+.cardcustom {
+    border-radius: 3px;
+    border: #000 solid 1px;
+    box-shadow: 5px 5px 20px #888;
+    padding: 15px;
+}
+
+.custom-right{
+    margin: 20px 0;
+}
+
+.head {
+    /* position: absolute;
+    top: 50%;
+    transform: translateY(-100%);
+    left: 50%;
+    margin-left: -50%;  */
+}
