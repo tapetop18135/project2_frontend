@@ -18,7 +18,7 @@ import { Fill, Stroke, Style, Text, RegularShape } from 'ol/style.js';
 import * as Highcharts from 'highcharts'
 import { noSelection } from './mapInteract';
 
-export var domainIP = "http://13.251.157.101:3200" //"http://13.251.157.101:8080"//"http://127.0.0.1:3200" //"http://13.251.157.101:8080"// "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
+export var domainIP = "http://127.0.0.1:3200" //"http://13.251.157.101:8080"//"http://127.0.0.1:3200" //"http://13.251.157.101:8080"// "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
 
 export var tempSend = {
     "mapAVG": undefined,
@@ -171,7 +171,7 @@ var tempColors = {
     ].reverse(),
 
     "Trend_colors_python": [
-        "#796022", "#9F1228", "#BA2823", "#CC4C44", "#DD7059", "#EC9374", "#F6B394", "#FBCCB4",
+        "#9F1228", "#9F1228", "#BA2823", "#CC4C44", "#DD7059", "#EC9374", "#F6B394", "#FBCCB4",
         "#FCE2D2", "#F9F0EB", "#EDF2F5", "#DAE9F2", "#C2DDEC", "#A2CDE3", "#7EB8D7", "#569FC9",
         "#3A87BD", "#2870B1", "#1A5899", "#0C3D73"
     ].reverse(),
@@ -204,20 +204,21 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
     tempSend["data_list"] = []
     tempSend["year_global"] = [year1, year2]
 
-    if ((dataset == "ghcndex" || dataset == "GHCN") && index_ != "") {
-        //  
-        var urldataAVG = `${domainIP}/api/getmap/mapAVG/${dataset}/${year1}/${year2}/${index_}/`
-        var urldataTrend = `${domainIP}/api/getmap/mapTrend/${dataset}/${year1}/${year2}/${index_}/`
-        var urldataPCA = `${domainIP}/api/getmap/mapPCA/${dataset}/${year1}/${year2}/${index_}/`
-        var urldataPCA_real = `${domainIP}/api/getmap/mapPCA_real/${dataset}/${year1}/${year2}/${index_}/`
+    // tempMapLayer["gridDataTrend_X"] = undefined
+    // if ((dataset == "ghcndex" || dataset == "GHCN") && index_ != "") {
+    //  
+    var urldataAVG = `${domainIP}/api/getmap/mapAVG/${dataset}/${year1}/${year2}/${index_}/`
+    var urldataTrend = `${domainIP}/api/getmap/mapTrend/${dataset}/${year1}/${year2}/${index_}/`
+    var urldataPCA = `${domainIP}/api/getmap/mapPCA/${dataset}/${year1}/${year2}/${index_}/`
+    // var urldataPCA_real = `${domainIP}/api/getmap/mapPCA_real/${dataset}/${year1}/${year2}/${index_}/`
 
-        var urldataGRAPH = `${domainIP}/api/getData/Graph/${dataset}/${year1}/${year2}/${index_}/`
+    var urldataGRAPH = `${domainIP}/api/getData/Graph/${dataset}/${year1}/${year2}/${index_}/`
 
 
-    }
-    else {
-        var urldata = `${domainIP}/api/getmap/reduce/${year1}/${year2}/${dataset}`
-    }
+    // }
+    // else {
+    // var urldata = `${domainIP}/api/getmap/reduce/${year1}/${year2}/${dataset}`
+    // }
 
 
     removeAll_layer()
@@ -351,6 +352,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         tempSend["lat_list"] = result["detail"]["lat_list"]
         tempSend["lon_list"] = result["detail"]["lon_list"]
 
+        debugger
 
 
 
@@ -371,10 +373,14 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         // tempMapLayer["gridDataTrend_X"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], tempSend["mapAVG"])
 
 
+
         // } else {
 
         // }
-        var gridSize = [2.7, 2.7]
+        var gridSize = [
+            (tempSend["lat_list"][1] - tempSend["lat_list"][0])+ 0.2,
+            (tempSend["lon_list"][1] - tempSend["lon_list"][0])+ 0.2
+        ]
 
         // var ary_color = ["#9f0000", "#d50000", "#ff0000", "#ff4900", "#ff9000", "#ffc400", "#ffec00", "#ffff66",
         // "#cfffff", "#aff6ff", "#9defff", "#86daff", "#6dc1ff", "#4297ff", "#2050ff", "#050fd9"].reverse()
@@ -389,7 +395,19 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
 
         map_all["map_avg"].addLayer(tempMapLayer["gridDataColorAVG"])
         map_all["map_avg"].addLayer(tempMapLayer["baselayer"])
-
+        debugger
+        
+        var i = 0
+        var checkTrendX = setInterval(function () {
+            if (tempMapLayer["gridDataTrend_X"] != undefined) {
+                map_all["map_avg"].addLayer(tempMapLayer["gridDataTrend_X"])
+                debugger
+                clearInterval(checkTrendX)
+                console.log("break interval")
+            }
+            console.log(i)
+            i+=1
+        }, 1000)
 
         setRightDisplay(find_AVG_2D(tempSend["mapAVG"]), temp_max_min["max_minAVG"][0], temp_max_min["max_minAVG"][1], "AVG")
         // alert("AVG")
@@ -404,81 +422,85 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    setTimeout(function () {
-        fetch(urldataTrend).then(function (res) {
-            return res.json();
-        }).then(function (result) {
-            // alert("Have Map Trend")
-            //  
-            // if (dataset == "GHCN") {
-            console.log("Trend", result)
-            // alert("TREND")
-            tempSend["lat_list"] = result["detail"]["lat_list"]
-            tempSend["lon_list"] = result["detail"]["lon_list"]
-            tempSend["mapTREND"] = result["map"]["mapTREND"]
+    // setTimeout(function () {
+    fetch(urldataTrend).then(function (res) {
+        return res.json();
+    }).then(function (result) {
+        // alert("Have Map Trend")
+        //  
+        // if (dataset == "GHCN") {
+        console.log("Trend", result)
+        // alert("TREND")
+        tempSend["lat_list"] = result["detail"]["lat_list"]
+        tempSend["lon_list"] = result["detail"]["lon_list"]
+        tempSend["mapTREND"] = result["map"]["mapTREND"]
 
-            // var colors = [ 
-            //     "#796022" ,"#9F1228", "#BA2823", "#CC4C44", "#DD7059" ,"#EC9374" , "#F6B394", "#FBCCB4",
-            //     "#FCE2D2" ,"#F9F0EB", "#EDF2F5", "#DAE9F2", "#C2DDEC", "#A2CDE3", "#7EB8D7", "#569FC9", 
-            //     "#3A87BD", "#2870B1", "#1A5899", "#0C3D73"
-            // ]
+        // var colors = [ 
+        //     "#796022" ,"#9F1228", "#BA2823", "#CC4C44", "#DD7059" ,"#EC9374" , "#F6B394", "#FBCCB4",
+        //     "#FCE2D2" ,"#F9F0EB", "#EDF2F5", "#DAE9F2", "#C2DDEC", "#A2CDE3", "#7EB8D7", "#569FC9", 
+        //     "#3A87BD", "#2870B1", "#1A5899", "#0C3D73"
+        // ]
 
-            temp_max_min["max_minTREND"] = find_max_min(tempSend["mapTREND"])
-            tempGeojson["geojsonTREND"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], tempSend["mapTREND"], tempSend["data_list"])
-            //  
+        temp_max_min["max_minTREND"] = find_max_min(tempSend["mapTREND"])
+        tempGeojson["geojsonTREND"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], tempSend["mapTREND"], tempSend["data_list"])
+        //  
 
-            // } else {
+        // } else {
 
-            // }
-            var gridSize = [2.7, 2.7]
-
-            tempMapLayer["gridDataColorTREND"] = genGridData(
-                tempGeojson["geojsonTREND"],
-                gridSize,
-                temp_max_min["max_minTREND"],
-                "sourceDataColorTrend",
-                tempColors["Trend_colors_pynoply"]
-            )
-
-            //  
-            map_all["map_trend"].addLayer(tempMapLayer["gridDataColorTREND"])
-            map_all["map_trend"].addLayer(tempMapLayer["baselayer"])
+        // }
+        var gridSize = [
+            (tempSend["lat_list"][1] - tempSend["lat_list"][0])+ 0.2,
+            (tempSend["lon_list"][1] - tempSend["lon_list"][0])+ 0.2
+        ]
 
 
-            var styles = {
-                'MultiLineString': new Style({
-                    stroke: new Stroke({
-                        color: 'black',
-                        width: 1
-                    })
+        tempMapLayer["gridDataColorTREND"] = genGridData(
+            tempGeojson["geojsonTREND"],
+            gridSize,
+            temp_max_min["max_minTREND"],
+            "sourceDataColorTrend",
+            tempColors["Trend_colors_pynoply"]
+        )
+
+        //  
+        map_all["map_trend"].addLayer(tempMapLayer["gridDataColorTREND"])
+        map_all["map_trend"].addLayer(tempMapLayer["baselayer"])
+
+
+        var styles = {
+            'MultiLineString': new Style({
+                stroke: new Stroke({
+                    color: 'black',
+                    width: 1
                 })
-            }
-
-            tempSend["mapTrend_X"] = result["map"]["hiypo"]
-            tempSend["geojson_Trend_X"] = gen_geoTrend_X(tempSend["mapTrend_X"], result["detail"]["lat_list"], result["detail"]["lon_list"], 2)
-
-            tempSourceLayer["sourceData_trend_X"] = new souceVector({
-                features: (new GeoJSON()).readFeatures(tempSend["geojson_Trend_X"]),
             })
+        }
 
-            var styleFunction = function (feature) {
-                return styles[feature.getGeometry().getType()];
-            };
+        tempSend["mapTrend_X"] = result["map"]["hiypo"]
+        tempSend["geojson_Trend_X"] = gen_geoTrend_X(tempSend["mapTrend_X"], result["detail"]["lat_list"], result["detail"]["lon_list"], 2)
 
-            tempMapLayer["gridDataTrend_X"] = new Vector({
-                source: tempSourceLayer["sourceData_trend_X"],
-                style: styleFunction
-            });
-
-            map_all["map_avg"].addLayer(tempMapLayer["gridDataTrend_X"])
-
-            setRightDisplay(find_AVG_2D(tempSend["mapTREND"]), temp_max_min["max_minTREND"][0], temp_max_min["max_minTREND"][1], "TREND")
-            // setRightDisplay(find_AVG_2D(tempSend["mapAVG"]), temp_max_min["max_minAVG"][0], temp_max_min["max_minAVG"][1])
-            // alert("SSSSSSSSSSSSSSSSSSSXXXXXXXXXXXXXXXXXXXX")
-            // $(".step3").animate({ width: "show" }, 400)
-            $(".step3").show(100)
+        tempSourceLayer["sourceData_trend_X"] = new souceVector({
+            features: (new GeoJSON()).readFeatures(tempSend["geojson_Trend_X"]),
         })
-    }, 4000)
+
+        var styleFunction = function (feature) {
+            return styles[feature.getGeometry().getType()];
+        };
+
+        tempMapLayer["gridDataTrend_X"] = new Vector({
+            source: tempSourceLayer["sourceData_trend_X"],
+            style: styleFunction
+        });
+
+
+
+        setRightDisplay(find_AVG_2D(tempSend["mapTREND"]), temp_max_min["max_minTREND"][0], temp_max_min["max_minTREND"][1], "TREND")
+        // setRightDisplay(find_AVG_2D(tempSend["mapAVG"]), temp_max_min["max_minAVG"][0], temp_max_min["max_minAVG"][1])
+        // alert("SSSSSSSSSSSSSSSSSSSXXXXXXXXXXXXXXXXXXXX")
+        // $(".step3").animate({ width: "show" }, 400)
+        $(".step3").show(100)
+    })
+    // }, 4000)
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -505,10 +527,12 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
 
 
 
-        temp_max_min["max_minPCA"] = find_max_min(tempSend["mapPCA"][0])
+        debugger
+        temp_max_min["max_minPCA"] = find_max_min(tempSend["mapPCA"][0], true)
         tempGeojson["geojsonPCA"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], tempSend["mapPCA"][0], true)
 
 
+        debugger
         temp_max_min["max_minVAR"] = find_max_min(tempSend["mapVar"])
         tempGeojson["geojson_VAR"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], tempSend["mapVar"])
         //  
@@ -517,14 +541,18 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         // } else {
 
         // }
-        var gridSize = [2.7, 2.7]
+        var gridSize = [
+            (tempSend["lat_list"][1] - tempSend["lat_list"][0])+ 0.2,
+            (tempSend["lon_list"][1] - tempSend["lon_list"][0])+ 0.2
+        ]
+
 
         tempMapLayer["gridDataColorPCA"] = genGridData(
             tempGeojson["geojsonPCA"],
             gridSize,
             temp_max_min["max_minPCA"],
             "sourceDataColorPCA",
-            tempColors["Trend_colors_pynoply"]
+            tempColors["Trend_colors_python"]
         )
 
         tempMapLayer["gridDataColorVAR"] = genGridData(
@@ -585,7 +613,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
             "Variance",
             "Graph PCA Variance",
             `period ${year1} - ${year2}`,
-            tempSend["type_measure"], tempSend["unit"], "orange", "line"
+            tempSend["type_measure"], "", "orange", "line"
         )
 
         // setRightDisplay(find_AVG_2D(tempSend["mapAVG"]), temp_max_min["max_minAVG"][0], temp_max_min["max_minAVG"][1])
@@ -705,8 +733,13 @@ function gen_geoTrend_X(data_list, list_lat, list_lon, size = 2.5) {
 function removeAll_layer() {
     for (var k_map in map_all) {
         for (var k_layer in tempMapLayer) {
+            // if(map_all[k_map] == "map_avg")
             map_all[k_map].removeLayer(tempMapLayer[k_layer])
+            // map_all[k_map].removeLayer(tempMapLayer["gridDataTrend_X"])
+            // tempMapLayer[k_layer] = undefined
+            // debugger
         }
+        
     }
 }
 export function setRightDisplay(avg, max, min, name) {
@@ -732,9 +765,9 @@ export function updateMapWithDate(map, data, geojsonNow) {
 export function genGeojson(list_lat, list_lon, data_list = "", typePca_or_trend = false, date = "") {
     var multi = 1
     if (typePca_or_trend) {
-        multi = 100
+        multi = 1000
     }
-
+    debugger
     //  
     var points = {
         type: 'FeatureCollection',
@@ -762,6 +795,7 @@ export function genGeojson(list_lat, list_lon, data_list = "", typePca_or_trend 
 
         }
     }
+    debugger
     return points
 
 }
@@ -828,9 +862,9 @@ export function genMap(target) {
         //  
     }
 
-    if(target == "mapAVG"){
+    if (target == "mapAVG") {
         var zoomInit = 2.3
-    }else{
+    } else {
         var zoomInit = 1.3
     }
 
@@ -872,7 +906,7 @@ export function find_AVG_2D(array) {
     return sum / total
 }
 
-var find_max_min = function (allGrid) {
+var find_max_min = function (allGrid, pca_or_trend=false) {
     //  
     var array = allGrid
     var max = array[0][0]
@@ -906,11 +940,9 @@ var find_max_min = function (allGrid) {
     // $(".maxStat").html(max.toFixed(2))
     // $(".minStat").html(min.toFixed(2))
     var multi = 1
-    if (tempSend["typeMap"] == "avg") {
-        multi = 1
-    } else if (tempSend["typeMap"] == "dm" || tempSend["typeMap"] == "trend") {
-        multi = 100
-    }
+    if (pca_or_trend) {
+        multi = 1000
+    } 
 
     return [max * multi, min * multi]
 
@@ -994,26 +1026,32 @@ export function genGridData(geojson, gridSize, max_min, name, ary_color) {
         // tem = tem.sort((a, b) => a - b)
         // console.log(tem)
         tem = lineSpace(min, max, ary_color.length)
+        
     } else {
-        var absMin = Math.abs(min)
-        var absMax = Math.abs(max)
-        if (absMax > absMin) {
-            max = absMax
-            min = absMax * -1
-        } else {
-            max = absMin
-            min = absMin * -1
+        tem = lineSpace(min, max, ary_color.length)
+        // var absMin = Math.abs(min)
+        // var absMax = Math.abs(max)
+        // if (absMax > absMin) {
+        //     max = absMax
+        //     min = absMax * -1
+        // } else {
+        //     max = absMin
+        //     min = absMin * -1
 
-        }
+        // }
 
 
-        var temp0 = max / Math.floor(ary_color.length / 2)
-        for (let i = 0; i < ary_color.length; i++) {
-            tem.push(min)
-            min += temp0
-        }
+        // var temp0 = max / Math.floor(ary_color.length / 2)
+        // for (let i = 0; i < ary_color.length; i++) {
+        //     tem.push(min)
+        //     min += temp0
+        // }
+       
+        // tem = lineSpace(min, max, ary_color.length)
+        debugger
     }
 
+    
 
     // var val_max = max + Math.abs(min)
     // for (let i = 0; i < ary_color.length; i++) {
@@ -1272,7 +1310,7 @@ $(document).ready(function () {
         }, 1000)
 
         var temp = $(this).parent().parent()
-        
+
         $(".side-menu").animate({ width: "toggle" }, 500)
         setTimeout(function () {
             $(".open-menu button").css("display", "block")
@@ -1413,7 +1451,7 @@ function checkStep2() {
 
 }
 
-function resetAll(){
+function resetAll() {
     $("#sourceDataColorAVG_legend").find("div").remove();
     $("#sourceDataColorVAR_legend").find("div").remove();
     $("#sourceDataColorPCA_legend").find("div").remove();
