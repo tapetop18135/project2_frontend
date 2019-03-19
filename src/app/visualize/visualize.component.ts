@@ -28,19 +28,19 @@ export class VisualizeComponent implements OnInit {
   selectPeriod = ["- Non select -","January", "February", "March", "April", "May", "June", "July", "August	", "September", "October", "November", "December"]
   selectedPeriod: string = this.selectPeriod[0]
 
-  selectYear = this.genYear(1951, 2080)
+  selectYear = this.genYear(1951, 2017)
   selectedYear: string = this.selectYear[0]
 
   selectPeriod2 = ["- Non select -","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   selectedPeriod2: string = this.selectPeriod[0]
 
-  selectYear2 = this.genYear(1951, 2080)
+  selectYear2 = this.genYear(1951, 2017)
   selectedYear2: string = this.selectYear2[0]
 
   selectArea = ["- Non select -","World", "Asia", "Africa", "South America", "North America", "Australia", "Europe"]
   selectedArea: string = this.selectArea[0]
 
-  select_dataType = ["- Non select -", "ghcndex", "ecearth_rcp45", "ecearth_rcp85", "mpi_rcp45", "mpi_rcp85"]
+  select_dataType = ["- Non select -", "ghcndex"]//,"ecearth_rcp45", "ecearth_rcp85", "mpi_rcp45", "mpi_rcp85"]
   selecteddataType: string = this.select_dataType[0]
 
   select_dataTypeIndex = ["- Non select -", 'CDD', 'CSDI', 'CWD', 'DTR', 'FD', 'GSL', 'ID', 'PRCPTOT', 'R10mm', 'R20mm', 'R95pT', 'R95p', 'R99p', 'Rx1day', 'Rx5day', 'SDII', 'SU', 'TN10p', 'TN90p', 'TNn', 'TNx', 'TR', 'TX10p', 'TX90p', 'TXn', 'TXx', 'WSDI']
