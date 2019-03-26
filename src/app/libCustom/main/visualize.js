@@ -18,7 +18,7 @@ import { Fill, Stroke, Style, Text, RegularShape } from 'ol/style.js';
 import * as Highcharts from 'highcharts'
 import { noSelection } from './mapInteract';
 
-export var domainIP = "http://13.251.157.101:3200" //"http://13.251.157.101:8080"//"http://127.0.0.1:3200" //"http://13.251.157.101:8080"// "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
+export var domainIP = "http://127.0.0.1:3200" //"http://13.251.157.101:8080"//"http://127.0.0.1:3200" //"http://13.251.157.101:8080"// "http://127.0.0.1:3200"//"http://13.251.157.101:8080" //"http://127.0.0.1:8080" //"" // "http://127.0.0.1:3200" //"http://18.136.209.215:8080"// //
 
 export var tempSend = {
     "mapAVG": undefined,
@@ -77,6 +77,8 @@ export var tempSend = {
     "type_index": "- Non select -",
 
     "ylabel": undefined,
+
+    "customizeData": undefined
 
 }
 export var highchartsModule = {
@@ -331,6 +333,12 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
             )
         }
 
+        // $(".showMapAll").fadeIn(500)
+        $(".showStatAll").fadeIn(500)
+        $(".showGraphAll1").fadeIn(500)
+        $(".showGraphAll2").fadeIn(500)
+        // $(".nameMap").fadeIn(500)
+
     })
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -352,7 +360,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         tempSend["lat_list"] = result["detail"]["lat_list"]
         tempSend["lon_list"] = result["detail"]["lon_list"]
 
-        debugger
+         
 
 
 
@@ -378,8 +386,9 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
 
         // }
         var gridSize = [
-            (tempSend["lat_list"][1] - tempSend["lat_list"][0])+ 0.2,
-            (tempSend["lon_list"][1] - tempSend["lon_list"][0])+ 0.2
+            
+            (tempSend["lon_list"][1] - tempSend["lon_list"][0]),
+            (tempSend["lat_list"][1] - tempSend["lat_list"][0])
         ]
 
         // var ary_color = ["#9f0000", "#d50000", "#ff0000", "#ff4900", "#ff9000", "#ffc400", "#ffec00", "#ffff66",
@@ -395,23 +404,24 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
 
         map_all["map_avg"].addLayer(tempMapLayer["gridDataColorAVG"])
         map_all["map_avg"].addLayer(tempMapLayer["baselayer"])
-        debugger
-        
+         
+
         var i = 0
         var checkTrendX = setInterval(function () {
             if (tempMapLayer["gridDataTrend_X"] != undefined) {
                 map_all["map_avg"].addLayer(tempMapLayer["gridDataTrend_X"])
-                debugger
+                 
                 clearInterval(checkTrendX)
                 console.log("break interval")
             }
             console.log(i)
-            i+=1
+            i += 1
         }, 1000)
 
         setRightDisplay(find_AVG_2D(tempSend["mapAVG"]), temp_max_min["max_minAVG"][0], temp_max_min["max_minAVG"][1], "AVG")
         // alert("AVG")
         //  
+        // $(".showMapAll").fadeIn(500)
 
     })
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -449,8 +459,9 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
 
         // }
         var gridSize = [
-            (tempSend["lat_list"][1] - tempSend["lat_list"][0])+ 0.2,
-            (tempSend["lon_list"][1] - tempSend["lon_list"][0])+ 0.2
+            
+            (tempSend["lon_list"][1] - tempSend["lon_list"][0]),
+            (tempSend["lat_list"][1] - tempSend["lat_list"][0])
         ]
 
 
@@ -477,8 +488,16 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         }
 
         tempSend["mapTrend_X"] = result["map"]["hiypo"]
-        tempSend["geojson_Trend_X"] = gen_geoTrend_X(tempSend["mapTrend_X"], result["detail"]["lat_list"], result["detail"]["lon_list"], 2)
-
+        if(tempSend["dataset"] == "ghcndex" || tempSend["dataset"] == "hadex2"){
+            var size = result["detail"]["lat_list"][1] - result["detail"]["lat_list"][0] - 0.5
+        }else{
+            var size = result["detail"]["lat_list"][1] - result["detail"]["lat_list"][0] - 0.1
+        }
+         
+        debugger
+        
+        tempSend["geojson_Trend_X"] = gen_geoTrend_X(tempSend["mapTrend_X"], result["detail"]["lat_list"], result["detail"]["lon_list"], size)
+        debugger
         tempSourceLayer["sourceData_trend_X"] = new souceVector({
             features: (new GeoJSON()).readFeatures(tempSend["geojson_Trend_X"]),
         })
@@ -527,23 +546,24 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
 
 
 
-        debugger
+         
         temp_max_min["max_minPCA"] = find_max_min(tempSend["mapPCA"][0], true)
         tempGeojson["geojsonPCA"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], tempSend["mapPCA"][0], true)
 
 
-        debugger
+         
         temp_max_min["max_minVAR"] = find_max_min(tempSend["mapVar"])
         tempGeojson["geojson_VAR"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], tempSend["mapVar"])
         //  
 
-        debugger
+         
         // } else {
 
         // }
         var gridSize = [
-            (tempSend["lat_list"][1] - tempSend["lat_list"][0])+ 0.2,
-            (tempSend["lon_list"][1] - tempSend["lon_list"][0])+ 0.2
+            
+            (tempSend["lon_list"][1] - tempSend["lon_list"][0]),
+            (tempSend["lat_list"][1] - tempSend["lat_list"][0])
         ]
 
 
@@ -583,7 +603,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
             "chartPCA",
             tempSend["graphPCA"]["time"]["axisY"][0],
             tempSend["graphPCA"]["time"]["axisX"],
-            "Pca 0",
+            "Pca 1",
             "Graph PCA Time Series",
             `period ${year1} - ${year2}`,
             tempSend["type_measure"], tempSend["unit"], "red", "line"
@@ -606,7 +626,7 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
         // }
 
 
-        highchartsModule["HighchartPCA_variance"] = genChart(
+        highchartsModule["HighchartPCA_variance"] = genChartInteract(
             "chartPCA_variance",
             tempSend["graphPCA"]["variance"]["axisY"],
             tempSend["graphPCA"]["variance"]["axisX"],
@@ -665,7 +685,8 @@ export var AVG_map = function (year1, year2, dataset, index_ = "") {
 }
 
 function gen_geoTrend_X(data_list, list_lat, list_lon, size = 2.5) {
-    var size = 2
+    debugger
+     
     var size_half = size / 2
     var points = {
         type: 'FeatureCollection',
@@ -737,9 +758,9 @@ function removeAll_layer() {
             map_all[k_map].removeLayer(tempMapLayer[k_layer])
             // map_all[k_map].removeLayer(tempMapLayer["gridDataTrend_X"])
             // tempMapLayer[k_layer] = undefined
-            // debugger
+            //  
         }
-        
+
     }
 }
 export function setRightDisplay(avg, max, min, name) {
@@ -748,17 +769,17 @@ export function setRightDisplay(avg, max, min, name) {
     $(`.min${name}Stat`).html(`${min.toFixed(2)} ${(name == "AVG") ? tempSend["unit"] : `${tempSend["unit"]} / Year`}`)
 }
 
-export function updateMapWithDate(map, data, geojsonNow) {
+export function updateMapWithDate(name, geojsonNow) {
+    //  
 
-
-    tempMapLayer["geojsonlayer"].clear()
+    tempSourceLayer[name].clear()
 
 
 
     var tempNewGeojson = new GeoJSON().readFeatures(geojsonNow)
-
-    tempMapLayer["geojsonlayer"].addFeatures(tempNewGeojson)
-
+    //  
+    tempSourceLayer[name].addFeatures(tempNewGeojson)
+    //  
 
 }
 
@@ -767,7 +788,7 @@ export function genGeojson(list_lat, list_lon, data_list = "", typePca_or_trend 
     if (typePca_or_trend) {
         multi = 1000
     }
-    debugger
+     
     //  
     var points = {
         type: 'FeatureCollection',
@@ -795,7 +816,7 @@ export function genGeojson(list_lat, list_lon, data_list = "", typePca_or_trend 
 
         }
     }
-    debugger
+     
     return points
 
 }
@@ -906,7 +927,7 @@ export function find_AVG_2D(array) {
     return sum / total
 }
 
-var find_max_min = function (allGrid, pca_or_trend=false) {
+var find_max_min = function (allGrid, pca_or_trend = false) {
     //  
     var array = allGrid
     var max = array[0][0]
@@ -942,7 +963,7 @@ var find_max_min = function (allGrid, pca_or_trend=false) {
     var multi = 1
     if (pca_or_trend) {
         multi = 1000
-    } 
+    }
 
     return [max * multi, min * multi]
 
@@ -1026,7 +1047,7 @@ export function genGridData(geojson, gridSize, max_min, name, ary_color) {
         // tem = tem.sort((a, b) => a - b)
         // console.log(tem)
         tem = lineSpace(min, max, ary_color.length)
-        
+
     } else {
         tem = lineSpace(min, max, ary_color.length)
         // var absMin = Math.abs(min)
@@ -1046,12 +1067,12 @@ export function genGridData(geojson, gridSize, max_min, name, ary_color) {
         //     tem.push(min)
         //     min += temp0
         // }
-       
+
         // tem = lineSpace(min, max, ary_color.length)
-        debugger
+         
     }
 
-    
+
 
     // var val_max = max + Math.abs(min)
     // for (let i = 0; i < ary_color.length; i++) {
@@ -1202,9 +1223,8 @@ export function genChart(target, data1, period, nameData1, nameGraph, nameSub, t
     return chart
 }
 
-export function genChartDM(target, data1, data2, nameData1, nameData2, period, nameGraph, nameSub, titleY, unit, color1, color2, type) {
-    console.log(data1)
-    Highcharts.chart(target, {
+export function genChartInteract(target, data1, period, nameData1, nameGraph, nameSub, titleY, unit, color, type) {
+    var chart = Highcharts.chart(target, {
         chart: {
             type: type
         },
@@ -1232,6 +1252,40 @@ export function genChartDM(target, data1, data2, nameData1, nameData2, period, n
             shared: true
         },
         plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function (e) {
+                            // var index = tempSend["date_list"].findIndex(function (m) {
+                            //     return m === e.point.category
+                            // })
+                            // var dataU = tempSend["data_list"][index]
+                            // alert(e.point.category - 1, "ssss")
+                        
+                            var dataT = tempSend["mapPCA"][e.point.category - 1]
+                            temp_max_min["max_minPCA"] = find_max_min(dataT, true)
+                            tempGeojson["geojsonPCA"] = genGeojson(tempSend["lat_list"], tempSend["lon_list"], dataT, true)
+                            //  
+                            updateMapWithDate("sourceDataColorPCA", tempGeojson["geojsonPCA"])
+                            // var t = highchartsModule["HighchartPCA_time"]
+                            
+                            highchartsModule["HighchartPCA_time"].addSeries({
+                                name: `Graph PCA Time Series ${e.point.category}`,
+                                data: tempSend["graphPCA"]["time"]["axisY"][e.point.category - 1],
+                                color: "red"
+                            })
+
+                            highchartsModule["HighchartPCA_time"].series[0].remove()
+
+                            $(".eof_index").html(e.point.category)
+
+
+                             
+                        }
+                    }
+                }
+            },
             spline: {
                 marker: {
                     radius: 4,
@@ -1240,32 +1294,46 @@ export function genChartDM(target, data1, data2, nameData1, nameData2, period, n
                 }
             }
         },
-        series: [{
-            name: nameData1,
-            marker: {
-                symbol: 'square'
-            },
-            color: color,
-            data: data1
+        series: [
+            {
+                name: nameData1,
+                marker: {
+                    symbol: 'square'
+                },
+                color: color,
+                data: data1
 
-        }, {
-            name: nameData2,
-            marker: {
-                symbol: 'square'
             },
-            color: color,
-            data: data2
-
-        }
         ]
     });
-}
 
+    return chart
+}
 
 
 /////////////////////////////////////////////////////
 ////////////////// VISUALIZE ///////////////////////
 //////////////////////////////////////////////////////
+
+fetch(`${domainIP}/api/getDataset`).then(function (res) {
+    return res.json();
+}).then(function (result) {
+    var datasets = result["datasets"]
+    var htmlselect =
+        `<select class="selctDatatset" style="width: 95%"><option>- Non select -</option>`
+    for (var i = 0; i < datasets.length; i += 1) {
+        htmlselect += `<option>${datasets[i]}</option>`
+    }
+    // 
+    // <option>d</option>
+    // <option>e</option>
+    // <option>f</option>
+    htmlselect += `</select>`
+
+    $(`.type_select_map`).html(htmlselect)
+     
+
+})
 
 var temp = ""
 $(document).ready(function () {
@@ -1293,14 +1361,151 @@ $(document).ready(function () {
     })
 
 
-    $(".customize .step2 .next").hide()
 
+
+    $(".selctDatatset").on('change', function (e) {
+        $(".customize .step2 .next").css("display","none")
+        tempSend["type_index"] = "- Non select -"
+        $(".selctDatatset option:selected").each(function () {
+            checkStep2()
+            console.log($(this).text())
+            var temp = $(this).text()
+            tempSend["dataset"] = temp
+            if (temp != "- Non select -") {
+
+                $(".indexselect").slideDown(500)
+                fetch(`${domainIP}/api/getdetailDataset/${temp}`).then(function (res) {
+                    return res.json();
+                }).then(function (result) {
+                     
+                    tempSend["customizeData"] = result[temp]
+                    tempSend["customizeData"]["key"] = temp
+                    var indexs = result[temp]["indexs"]
+                     
+                    var htmlselectIndex =
+                        `<select class="selctIndex" style="width: 95%"><option>- Non select -</option>`
+                    for (var i = 0; i < indexs.length; i += 1) {
+                        htmlselectIndex += `<option>${indexs[i]}</option>`
+                    }
+                    // 
+                    // <option>d</option>
+                    // <option>e</option>
+                    // <option>f</option>
+                    htmlselectIndex += `</select>`
+
+                    $(`.type_index`).html(htmlselectIndex)
+                     
+                })
+            }
+
+        });
+    })
+
+    $(".indexselect").on('change', function (e) {
+        tempSend["year1"] = "- Non select -"
+        tempSend["year2"] = "- Non select -"
+        tempSend["month1"] = "- Non select -"
+        tempSend["month2"] = "- Non select -"
+        $(".indexselect option:selected").each(function () {
+            checkStep2()
+            var monthArr = ["- Non select -", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            var temp = $(this).text()
+            tempSend["type_index"] = temp
+            //  
+            if (temp != "- Non select -") {
+                // alert()
+                console.log(temp)
+                // for
+                var tempIndexD = tempSend["customizeData"]
+                var init = tempIndexD["start"]
+                var end = tempIndexD["stop"]
+                
+                var selectY1 = "selctYearinit"
+                var selectM1 = "selctMonthinit"
+                var selectY2 = "selctYearend"
+                var selectM2 = "selctMonthend"
+                
+                var htmlselectP1 =
+                    `<select class="${selectY1}" style="width: 45%"><option>- Non select -</option>`
+                for (var i = init; i <= end; i += 1) {
+                    htmlselectP1 += `<option>${i}</option>`
+                }
+
+                htmlselectP1 += `</select> - <select class="${selectM1}" style="width: 45%">`
+
+                for (var i = 0; i < 13; i += 1) {
+                    htmlselectP1 += `<option>${monthArr[i]}</option>`
+                }
+                htmlselectP1 += `</select>`
+
+                $(`.initYear`).html("From <br>"+htmlselectP1)
+                ////////////////////////////////////////////////////////////////
+                var htmlselectP1 =
+                    `<select class="${selectY2}" style="width: 45%"><option>- Non select -</option>`
+                for (var i = init; i <= end; i += 1) {
+                    htmlselectP1 += `<option>${i}</option>`
+                }
+
+                htmlselectP1 += `</select> - <select class="${selectM2}" style="width: 45%">`
+
+                for (var i = 0; i < 13; i += 1) {
+                    htmlselectP1 += `<option>${monthArr[i]}</option>`
+                }
+                htmlselectP1 += `</select>`
+                $(`.endYear`).html("To <br>"+htmlselectP1)
+                $(".selectPeriod").slideDown(500)
+            }
+
+            $(".selctYearinit").on('change', function (e) {
+                $(".selctYearinit option:selected").each(function () {
+                    var temp = $(this).text()
+                    tempSend["year1"] = temp
+                    console.log(temp)
+                    checkStep2()
+        
+                });
+            })
+            $(".selctMonthinit").on('change', function (e) {
+                $(".selctMonthinit option:selected").each(function () {
+                    var temp = $(this).text()
+                    tempSend["month1"] = temp
+                    console.log(temp)
+                    checkStep2()
+        
+                });
+            })
+            $(".selctYearend").on('change', function (e) {
+                $(".selctYearend option:selected").each(function () {
+                    var temp = $(this).text()
+                    tempSend["year2"] = temp
+                    console.log(temp)
+                    checkStep2()
+        
+                });
+            })
+            $(".selctMonthend").on('change', function (e) {
+                $(".selctMonthend option:selected").each(function () {
+                    var temp = $(this).text()
+                    tempSend["month2"] = temp
+                    console.log(temp)
+                    checkStep2()
+        
+                });
+            })
+        
+
+        });
+    })
+
+  
+
+    $(".customize .step2 .next").hide()
 
     $(".customize .next").on("click", function (e) {
         // alert("SSS")
         resetAll()
         noSelection(map_all["map_avg"])
-        debugger
+         
         e.preventDefault()
         console.log(tempSend)
         console.log("SSSSSSSSSSSSSSS")
@@ -1323,7 +1528,7 @@ $(document).ready(function () {
             map_all["map_var"] === undefined
         ) {
             $(".showMapAll").fadeIn(500)
-            $(".showStatAll").fadeIn(500)
+            // $(".showStatAll").fadeIn(500)
             $(".showGraphAll").fadeIn(500)
             $(".nameMap").fadeIn(500)
 
@@ -1455,5 +1660,5 @@ function resetAll() {
     $("#sourceDataColorAVG_legend").find("div").remove();
     $("#sourceDataColorVAR_legend").find("div").remove();
     $("#sourceDataColorPCA_legend").find("div").remove();
-    debugger
+     
 }

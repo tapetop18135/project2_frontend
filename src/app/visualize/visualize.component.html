@@ -1,91 +1,98 @@
 <!-- <button class="ShowDM">SSSS</button> -->
-<div class="visualize">
 
-  <div class="open-menu" style="">
-    <button>
-      <img src="https://cdn4.iconfinder.com/data/icons/wirecons-free-vector-icons/32/menu-alt-256.png" style="width: 40px;" alt="">
-    </button>
-  </div>
+<div class="open-menu" style="">
+  <button>
+    <img src="https://cdn4.iconfinder.com/data/icons/wirecons-free-vector-icons/32/menu-alt-256.png" style="width: 40px;" alt="">
+  </button>
+</div>
 
-  <div class="side-menu customize">
+<div class="side-menu customize">
 
-    <div class="col-sm-12" style="">
-      <!-- <div class="card" style="width: 100%; height: 700px;"> -->
-      <!-- <h4 class="">Customize</h4> -->
-      <!-- <div class="card-body customize"> -->
+  <div class="col-sm-12" style="">
+    <!-- <div class="card" style="width: 100%; height: 700px;"> -->
+    <!-- <h4 class="">Customize</h4> -->
+    <!-- <div class="card-body customize"> -->
 
-      <div class="step2" style="width: 100%; height: 100%; display: none;">
-        <div style="margin: 10px 0 40px 0;">
-          <h2 style="display: inline-block; margin: 10px">Customize</h2>
-          <div class="close-menu">
-            <button>
-              <img src="https://image.flaticon.com/icons/png/512/53/53804.png" style="width: 30px;" alt="">
-            </button>
-          </div>
-        </div>
-        STEP 2
-        <div class="step2-2" style="">
-          <div style="width: 100%;">
-            <div class="cardcustomM">
-              <h5>DATASET</h5>
-              <!-- <h5 class="card-body"> -->
-              <div class="type_select_map">
-                <div class="type_select_map">
-                  <select class="typeMap" style="width: 95%" [(ngModel)]="selecteddataType" name="selecteddatatype">
-                    <option *ngFor="let oT of select_dataType">{{ oT }}</option>
-                  </select>
-                </div>
-
-              </div>
-              <!-- </h5> -->
-            </div>
-            <div class="cardcustomM">
-              <h5>TYPE INDEX</h5>
-              <!-- <h5 class="card-body"> -->
-              <div class="type_index">
-                <div class="type_index">
-                  <select class="type_index" style="width: 95%" [(ngModel)]="selecteddataTypeIndex" name="selecteddataTypeIndex">
-                    <option *ngFor="let oTs of select_dataTypeIndex">{{ oTs }}</option>
-                  </select>
-                </div>
-
-              </div>
-              <!-- </h5> -->
-            </div>
-            <div class="cardcustomM">
-              <h5>PERIOD</h5>
-              <!-- <h5 class="card-body"> -->
-              From
-              <br>
-              <select class="yearS" style="width: 45%" [(ngModel)]="selectedYear" name="selectedYear">
-                <option *ngFor="let i of selectYear">{{ i }}</option>
-              </select>
-              -
-              <select class="monthS" style="width: 45%" [(ngModel)]="selectedPeriod" name="selectedPeriod">
-                <option *ngFor="let j of selectPeriod">{{ j }}</option>
-              </select>
-              <br> To
-              <br>
-              <select class="yearS2" style="width: 45%" [(ngModel)]="selectedYear2" name="selectedYear2">
-                <option *ngFor="let k of selectYear2">{{ k }}</option>
-              </select>
-              -
-              <select class="monthS2" style="width: 45%" [(ngModel)]="selectedPeriod2" name="selectedPeriod2">
-                <option *ngFor="let l of selectPeriod2">{{ l }}</option>
-              </select>
-
-              <!-- </h5> -->
-            </div>
-            <p class="statusCant">Cant Next</p>
-          </div>
-        </div>
-        <hr>
-        <div style="width: 100%; height: 80%;">
-          <button class="next">VISUZLIZE</button>
+    <div class="step2" style="width: 100%; height: 100%; display: none;">
+      <div style="margin: 10px 0 40px 0;">
+        <h2 style="display: inline-block; margin: 10px">Customize</h2>
+        <div class="close-menu">
+          <button>
+            <img src="https://image.flaticon.com/icons/png/512/53/53804.png" style="width: 30px;" alt="">
+          </button>
         </div>
       </div>
+      <div class="step2-2" style="">
+        <div style="width: 100%;">
+          <div class="cardcustomM">
+            <h5>DATASET</h5>
+            <!-- <h5 class="card-body"> -->
+            <div class="type_select_map">
+              <!-- <div class="type_select_map"> -->
+                <!-- <select class="typeMap" style="width: 95%" [(ngModel)]="selecteddataType" name="selecteddatatype">
+                  <option *ngFor="let oT of select_dataType">{{ oT }}</option>
+                </select> -->
+              <!-- </div> -->
+
+            </div>
+            <!-- </h5> -->
+          </div>
+          <div class="cardcustomM indexselect" style="display: none">
+            <h5>TYPE INDEX</h5>
+            <!-- <h5 class="card-body"> -->
+            <div class="type_index">
+              <!-- <div class="type_index">
+                <select class="type_index" style="width: 95%" [(ngModel)]="selecteddataTypeIndex" name="selecteddataTypeIndex">
+                  <option *ngFor="let oTs of select_dataTypeIndex">{{ oTs }}</option>
+                </select>
+              </div> -->
+
+            </div>
+            <!-- </h5> -->
+          </div>
+          <div class="cardcustomM selectPeriod" style="display: none">
+            <h5>PERIOD</h5>
+            <div class="initYear">
+            </div>
+            <div class="endYear">
+            </div>
+            <!-- <h5 class="card-body"> -->
+            <!-- From
+            <br>
+            <select class="yearS" style="width: 45%" [(ngModel)]="selectedYear" name="selectedYear">
+              <option *ngFor="let i of selectYear">{{ i }}</option>
+            </select>
+            -
+            <select class="monthS" style="width: 45%" [(ngModel)]="selectedPeriod" name="selectedPeriod">
+              <option *ngFor="let j of selectPeriod">{{ j }}</option>
+            </select>
+            <br> To
+            <br>
+            <select class="yearS2" style="width: 45%" [(ngModel)]="selectedYear2" name="selectedYear2">
+              <option *ngFor="let k of selectYear2">{{ k }}</option>
+            </select>
+            -
+            <select class="monthS2" style="width: 45%" [(ngModel)]="selectedPeriod2" name="selectedPeriod2">
+              <option *ngFor="let l of selectPeriod2">{{ l }}</option>
+            </select> -->
+
+            <!-- </h5> -->
+          </div>
+          <p class="statusCant">Cant Next</p>
+        </div>
+      </div>
+      <hr>
+      <div style="width: 100%; height: 80%;">
+        <button class="next">VISUZLIZE</button>
+      </div>
     </div>
+
   </div>
+
+</div>
+<div class="visualize" style="width: 90%; margin: auto">
+
+
 
   <div class="">
     <div class="head" style="">
@@ -314,14 +321,14 @@
 
   <div class="showGraphAll">
     <h1 style="margin: 30px 30px; text-align: left;">Graph</h1>
-    <div style="text-align: center">
+    <div class="showGraphAll1" style="text-align: center; display: none;">
       <!-- <div class="cardcustom" style="margin: 5px;width: 32%; display: inline-block ;" id="chartAvg"></div> -->
-      <div class="cardcustom" style="margin: 15px;width: 40%; display: inline-block ;" id="chartSeason"></div>
-      <div class="cardcustom" style="margin: 15px;width: 40%; display: inline-block ;" id="chartAvgANN"></div>
+      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartSeason"></div>
+      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartAvgANN"></div>
     </div>
-    <div style="text-align: center">
-      <div class="cardcustom" style="margin: 15px;width: 40%; display: inline-block ;" id="chartPCA"></div>
-      <div class="cardcustom" style="margin: 15px;width: 40%; display: inline-block ;" id="chartPCA_variance"></div>
+    <div class="showGraphAll2" style="text-align: center; display: none;">
+      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartPCA"></div>
+      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartPCA_variance"></div>
     </div>
     <!-- <div class="graph set_margin_middle">
       <div class="row">
