@@ -194,7 +194,7 @@ var tempColors = {
 
 export var vectorLayerGeo = new Vector({
     source: new souceVector({
-        url: `${domainIP}/api/getgeocountry`,
+        url: `/assets/staticfile/country.json`,
         format: new GeoJSON(),
         // wrapX: false
     }),
@@ -863,13 +863,15 @@ var styleGeo = new Style({
 
 export function genMap(target) {
     console.log("--------- GEN MAP ---------")
+
+    debugger
     var basesource = new Tile({
         source: new OSM({})
     })
     if (tempMapLayer["baselayer"] == undefined) {
         var BasevectorLayerGeo = new Vector({
             source: new souceVector({
-                url: `${domainIP}/api/getgeocountry`,
+                url: `/assets/staticfile/country.json`,
                 format: new GeoJSON(),
                 // wrapX: false
             }),
@@ -882,6 +884,7 @@ export function genMap(target) {
         tempMapLayer["baselayer"] = BasevectorLayerGeo//basesource
         //  
     }
+    debugger
 
     if (target == "mapAVG") {
         var zoomInit = 2.3
