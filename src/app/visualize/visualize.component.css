@@ -121,6 +121,8 @@
 
 .custom-right{
     margin: 20px 0;
+    display: inline-block;
+    width: 20%;
 }
 
 .head {
@@ -129,4 +131,38 @@
     transform: translateY(-100%);
     left: 50%;
     margin-left: -50%;  */
+}
+
+
+
+
+
+
+
+
+
+.open-detail {
+    position: fixed;
+    right: 0;
+    z-index: 1;
+    /* display: none; */
+}
+.open-detail button {
+    /* background: transparent; */
+    background: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.side-detail-in {
+    margin: 5px;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+.side-detail-in .header{
+    padding: 9px;
+    border: 1px solid #ccc;
+    background: #ccc;
+    
 }

@@ -1,5 +1,5 @@
 <!-- <button class="ShowDM">SSSS</button> -->
-
+<!-- <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script> -->
 <div class="open-menu" style="">
   <button>
     <img src="/assets/pig/menu.png" style="width: 40px;" alt="">
@@ -29,7 +29,7 @@
             <!-- <h5 class="card-body"> -->
             <div class="type_select_map">
               <!-- <div class="type_select_map"> -->
-                <!-- <select class="typeMap" style="width: 95%" [(ngModel)]="selecteddataType" name="selecteddatatype">
+              <!-- <select class="typeMap" style="width: 95%" [(ngModel)]="selecteddataType" name="selecteddatatype">
                   <option *ngFor="let oT of select_dataType">{{ oT }}</option>
                 </select> -->
               <!-- </div> -->
@@ -90,9 +90,84 @@
   </div>
 
 </div>
-<div class="visualize" style="width: 90%; margin: auto">
 
 
+<div class="open-detail" style="">
+  <button>
+    <img src="/assets/pig/menu.png" style="width: 40px;" alt="">
+  </button>
+</div>
+
+
+<div class="visualize" style="width: 80%; margin: auto">
+
+
+  <div class="side-detail">
+    <div class="step3" style="width: 100%; height: 100%;">
+      <div class="side-detail-in" style=" text-align: center ;width:20%; height: 200px; float: left">
+        <h2 class="" style="margin: 15px">Select On Map</h2>
+        <div style="width: 90%; margin: auto">
+          <!-- <div class="custom-right"> -->
+          <!-- <h5>SELECTION ON MAP</h5> -->
+          <!-- <h5 class="card-body"> -->
+          <div class="type_select_show">
+            <select [(ngModel)]="selectedOnMap" (change)="onSelectFeature($event.target.value)" name="selectOnmap"
+              style="width: 100%">
+              <option *ngFor="let o of selectArr">{{ o }}</option>
+            </select>
+          </div>
+          <!-- </h5> -->
+          <!-- </div> -->
+        </div>
+      </div>
+
+      <div class="side-detail-in" style="width:20%; float: left;  height: 200px;">
+        <h4 class="header">Average Map</h4>
+        <p style="font-size: 20px; margin: 10px">Mean :
+          <span class="meanAVGStat">--</span>
+        </p>
+        <p style="font-size: 20px; margin: 10px">Max :
+          <span class="maxAVGStat">--</span>
+        </p>
+        <p style="font-size: 20px; margin: 10px">Min :
+          <span class="minAVGStat">--</span>
+        </p>
+      </div>
+      <div class="side-detail-in" style="width:20%; float: left;  height: 200px;">
+        <h4 class="header">Trend Map</h4>
+        <p style="font-size: 20px; margin: 10px">Mean :
+          <span class="meanTRENDStat">--</span>
+        </p>
+        <p style="font-size: 20px; margin: 10px">Max :
+          <span class="maxTRENDStat">--</span>
+        </p>
+        <p style="font-size: 20px; margin: 10px">Min :
+          <span class="minTRENDStat">--</span>
+        </p>
+      </div>
+
+      <div class="side-detail-in" style="width:37%; float: left;  height: 200px;">
+        <h4 class="header">Description</h4>
+        <!-- <table>
+        <tr>
+          <td style="width: 50%;">
+              <div class="description_index_left">No Data</div></td>
+          <td style="width: 50%;">
+              <div class="description_index_right">No Data</div></td>
+        </tr>
+      </table> -->
+        <div style="width: 50%; float: left;">
+          <div class="description_index_left" style="padding-left: 10px;">No Data</div>
+        </div>
+        <div style="width: 50%; float: left;">
+          <div class="description_index_right">No Data</div>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
 
   <div class="">
     <div class="head" style="">
@@ -111,7 +186,10 @@
       <span class="dayShow"></span> -->
     </h4>
   </div>
-  <div class="row">
+
+
+
+  <div class="row" style="width:100%; margin-right: 0; margin-left: 0;">
     <!-- <div class="col-sm-3" style="">
       <div class="card" style="width: 100%; height: 700px;">
         <h4 class="card-header">Customize</h4>
@@ -203,44 +281,22 @@
         </div>
       </div>
     </div> -->
-    <div class="col-sm-10 showMapAll">
-      <div class="row">
-        <!-- <div class="col-sm-12" st> -->
-        <div class="cardcustom" style="width: 95%; height: 100%; margin: auto; ">
+    <div class="showMapAll" style="width: 68%;">
+      <!-- <div class="row" style="margin-left: 0"> -->
+      <!-- <div class="col-sm-12" st> -->
+      <div style="height: 100%; padding: 5px">
+        <div class="cardcustom" style="width: 100%; height: 100%; margin: auto; ">
 
-          <p style="text-align: center; font-size:  22px; font-weight: lighter; height: 10%;">Average</p>
-          <div id="mapAVG" class="mapAVG" style="width: 95%; height: 80%;"></div>
-          <div id="sourceDataColorAVG_legend" style="width: 90%; height: 10%; text-align: center; margin: auto"></div>
-        </div>
-        <!-- </div> -->
-      </div>
-      <div class="row" style="margin: 15px 0; width: 98.3%; margin: auto; margin-top: 20px; margin-bottom: 20px;">
-
-        <div class="col-sm-6">
-
-          <div class="cardcustom" style="width: 100%; height: 100%;">
-            <p style="text-align: center; font-size:  22px; font-weight: lighter;">Eof
-              <span class="eof_index"></span>
-            </p>
-            <div id="mapPCA" class="mapPCA" style="width: 100%; height: 80%;"></div>
-            <div id="sourceDataColorPCA_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <!-- <div class="card" style="width: 100%; height: 100%;">
-    
-                <p style="text-align: center">Eof RAW</p>
-                <div id="mapPCA_real" class="mapPCA_real" style="width: 100%; height: 80%;"></div>
-                <div id="sourceDataColorPCA_RAW_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
-              </div> -->
-          <div class="cardcustom" style="width: 100%; height: 100%;">
-
-            <p style="text-align: center; font-size:  22px; font-weight: lighter;">Variance</p>
-            <div id="map_var" class="map_var" style="width: 100%; height: 80%;"></div>
-            <div id="sourceDataColorVAR_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
-          </div>
+          <p style="text-align: center; font-size:  22px; font-weight: lighter; height: 5%;">Average</p>
+          <div id="mapAVG" class="mapAVG" style="width: 100%; height: 85%; "></div>
+          <div id="sourceDataColorAVG_legend"
+            style="width: 90%; height: 10%; text-align: center; margin: auto; padding-top: 2%;"></div>
         </div>
       </div>
+
+      <!-- </div> -->
+      <!-- </div> -->
+
 
       <!-- <div class="card" style="width: 100%; height: 100%;">
         <div id="mapAVG" class="mapAVG" style="width: 100%; height: 90%;"></div>
@@ -267,69 +323,61 @@
       </div> -->
 
     </div>
-    <div class="col-sm-2">
-      <div class="step3" style="width: 100%; height: 100%; padding: 30px; margin-right: 10px;">
-        <h2 class="custom-right">Select On Map</h2>
-        <div style="width: 100%;">
-          <div class="cardcustomM custom-right">
-            <!-- <h5>SELECTION ON MAP</h5> -->
-            <!-- <h5 class="card-body"> -->
-            <div class="type_select_show">
-              <select [(ngModel)]="selectedOnMap" (change)="onSelectFeature($event.target.value)" name="selectOnmap" style="width: 100%">
-                <option *ngFor="let o of selectArr">{{ o }}</option>
-              </select>
-            </div>
-            <!-- </h5> -->
-          </div>
-        </div>
-        <div class="card custom-right" style="">
-          <h4 class="card-header">Average Map</h4>
-          <p style="font-size: 20px; margin: 10px">Mean :
-            <span class="meanAVGStat">--</span>
-          </p>
-          <p style="font-size: 20px; margin: 10px">Max :
-            <span class="maxAVGStat">--</span>
-          </p>
-          <p style="font-size: 20px; margin: 10px">Min :
-            <span class="minAVGStat">--</span>
-          </p>
-        </div>
-        <div class="card custom-right" style="">
-          <h4 class="card-header">Trend Map</h4>
-          <p style="font-size: 20px; margin: 10px">Mean :
-            <span class="meanTRENDStat">--</span>
-          </p>
-          <p style="font-size: 20px; margin: 10px">Max :
-            <span class="maxTRENDStat">--</span>
-          </p>
-          <p style="font-size: 20px; margin: 10px">Min :
-            <span class="minTRENDStat">--</span>
-          </p>
-        </div>
+    <div class="showMapAll" style="height:100%; width: 32%; margin-left: -10px; padding: 0 0 0 12px;">
+      <!-- <div class="row" style="margin: 15px 0; width: 98.3%; margin: auto; margin-top: 20px; margin-bottom: 20px;"> -->
+      <!-- <div class="row"> -->
 
-        <div class="card custom-right">
-          <h4 class="card-header">Description</h4>
-          <div class="description_index">No Data</div>
+      <!-- </div> -->
+
+      <!-- <div class="row"> -->
+      <!-- <div class="col-sm-6" style="padding-left: 0;"> -->
+      <!-- <div class="card" style="width: 100%; height: 100%;">
+              
+                          <p style="text-align: center">Eof RAW</p>
+                          <div id="mapPCA_real" class="mapPCA_real" style="width: 100%; height: 80%;"></div>
+                          <div id="sourceDataColorPCA_RAW_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
+                        </div> -->
+      <div style="padding: 5px;">
+        <div class="cardcustom" style="width: 100%; height: 100%;">
+
+          <p style="text-align: center; font-size:  22px; font-weight: lighter;">Variance</p>
+          <div id="map_var" class="map_var" style="width: 100%; height: 80%;"></div>
+          <div id="sourceDataColorVAR_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
         </div>
       </div>
+
+      <div style="padding: 5px">
+
+        <div class="cardcustom" style="width: 100%; height: 100%;">
+          <p style="text-align: center; font-size:  22px; font-weight: lighter; margin: 0;">Eof
+            <span class="eof_index"></span>
+          </p>
+          <div id="mapPCA" class="mapPCA" style="width: 100%; height: 80%;"></div>
+          <div id="sourceDataColorPCA_legend" style="width: 70%; height: 10%; text-align: center; margin: auto"></div>
+        </div>
+      </div>
+      <!-- </div> -->
+      <!-- </div> -->
+
+      <!-- </div> -->
+
     </div>
 
 
   </div>
 
 
-
   <div class="showGraphAll">
-    <h1 style="margin: 30px 30px; text-align: left;">Graph</h1>
-    <div class="showGraphAll1" style="text-align: center; display: none;">
-      <!-- <div class="cardcustom" style="margin: 5px;width: 32%; display: inline-block ;" id="chartAvg"></div> -->
-      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartSeason"></div>
-      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartAvgANN"></div>
+
+    <div style="text-align: center">
+      <h2>Graph</h2>
     </div>
-    <div class="showGraphAll2" style="text-align: center; display: none;">
-      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartPCA"></div>
-      <div class="cardcustom" style="margin: 15px;width: 45%; display: inline-block ;" id="chartPCA_variance"></div>
-    </div>
+    <!-- <h1 style="margin: 30px 30px; text-align: left;">Graph</h1> -->
+    <div class="cardcustom" style="margin: 2px;width: 33%; display: inline-block ;" id="chartSeason"></div>
+    <div class="cardcustom" style="margin: 2px;width: 33%; display: inline-block ;" id="chartAvgANN"></div>
+    <div class="cardcustom" style="margin: 2px;width: 33%; display: inline-block ;" id="chartPCA_variance"></div>
+    <div class="cardcustom" style="margin: 2px;width: 100%; display: inline-block ;" id="chartPCA"></div>
+
     <!-- <div class="graph set_margin_middle">
       <div class="row">
         <div class="graph_1_2">
