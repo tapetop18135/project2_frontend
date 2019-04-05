@@ -17,7 +17,7 @@ import { ThrowStmt } from '@angular/compiler';
 })
 export class VisualizeComponent implements OnInit {
   
-  title = "Visualization"
+  title = "Climate Visualization"
   private map
   private yearStart: string;
   private yearStop: string;
